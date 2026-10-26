@@ -375,7 +375,7 @@
             { id: 187, word: "point", pos: "n.", meaning: "點", daily: "He made a very good point in the meeting.", dailyZh: "他在會議中提出了很好的觀點。", fab: "Check measurement points across the wafer surface.", fabZh: "檢查晶圓表面各個量測點。" },
             { id: 188, word: "position", pos: "n.", meaning: "位置", daily: "Adjust your seat position for driving.", dailyZh: "調整你的駕駛座椅位置。", fab: "The robotic arm moves the wafer to the correct position.", fabZh: "機械手臂將晶圓移動到正確位置。" },
             { id: 189, word: "positive", pos: "a.", meaning: "正向的", daily: "Keep a positive attitude toward challenges.", dailyZh: "對挑戰保持正向態度。", fab: "Photoresist is classified as positive or negative tone.", fabZh: "光阻被分類為正型或負型。" },
-            { id: 190, word: "postpone", v., meaning: "延期", daily: "We had to postpone the outdoor event due to rain.", dailyZh: "因為下雨我們不得不將戶外活動延期。", fab: "Postpone tool maintenance if urgent production is needed.", fabZh: "若需要緊急生產，可將機台維護延期。" },
+            { id: 190, word: "postpone", pos: "v.", meaning: "延期", daily: "We had to postpone the outdoor event due to rain.", dailyZh: "因為下雨我們不得不將戶外活動延期。", fab: "Postpone tool maintenance if urgent production is needed.", fabZh: "若需要緊急生產，可將機台維護延期。" },
             { id: 191, word: "power", pos: "n.", meaning: "力量", daily: "Wind power is a clean energy source.", dailyZh: "風力發電是一種乾淨的能源。", fab: "Check power supply cables before turning on equipment.", fabZh: "開啟設備前檢查電源供應纜線。" },
             { id: 192, word: "practice", pos: "v.", meaning: "練習", daily: "Practice speaking English every day.", dailyZh: "每天練習說英文。", fab: "Practice safety protocols during routine drills.", fabZh: "在例行演練中落實安全規範。" },
             { id: 193, word: "prepare", pos: "v.", meaning: "準備", daily: "Prepare your presentation slides in advance.", dailyZh: "提前準備你的簡報投影片。", fab: "Prepare chemical solutions according to recipe instructions.", fabZh: "根據處方說明準備化學溶液。" },
@@ -576,10 +576,8 @@
 
         function getNextCardIndex(lastWasCorrect) {
             if (!lastWasCorrect) {
-                // If incorrect, 60% chance to repeat soon or move to next
                 currentIndex = (currentIndex + 1) % vocabData.length;
             } else {
-                // Weighted selection favoring words with more errors
                 let weightedPool = [];
                 vocabData.forEach((vocab, idx) => {
                     let weight = 1;
@@ -587,7 +585,7 @@
                     const mastered = userProgress[vocab.id]?.mastered || false;
                     
                     if (errs > 0) weight += errs * 3;
-                    if (mastered) weight = 0.2; // Lower appearance frequency for mastered words
+                    if (mastered) weight = 0.2;
 
                     for (let i = 0; i < Math.ceil(weight); i++) {
                         weightedPool.push(idx);
