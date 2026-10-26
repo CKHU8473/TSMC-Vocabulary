@@ -1,1187 +1,672 @@
 <!DOCTYPE html>
 <html lang="zh-TW" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TSMC 半導體與職場核心單字記憶系統</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0f7ff',
-              100: '#e0effe',
-              500: '#0284c7',
-              600: '#0265d2',
-              700: '#034ea2',
-              800: '#073674',
-              900: '#0a2347',
-            },
-            tsmc: {
-              red: '#e11d48',
-              navy: '#0f172a',
-              accent: '#06b6d4',
-              card: '#1e293b'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSMC 半導體與職場核心單字記憶系統</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff', 100: '#e0effe', 500: '#0284c7', 600: '#0265d2', 700: '#034ea2', 800: '#073674', 900: '#0a2347',
+                        },
+                        tsmc: {
+                            red: '#e1d48', navy: '#0f172a', accent: '#06b6d4', card: '#1e293b'
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
-    .perspective-1000 {
-      perspective: 1000px;
-    }
-    .transform-style-3d {
-      transform-style: preserve-3d;
-    }
-    .backface-hidden {
-      backface-visibility: hidden;
-    }
-    .rotate-y-180 {
-      transform: rotateY(180deg);
-    }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
-    }
-  </style>
+    </script>
+    <style>
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-slate-950">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white">
 
-  <!-- TOP HEADER -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-600 via-rose-700 to-slate-900 flex items-center justify-center shadow-lg shadow-rose-900/30 border border-rose-500/30">
-          <i class="fa-solid font-bold text-white text-lg">Fab</i>
+    <!-- Navbar -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-lg shadow-brand-500/30">
+                    T
+                </div>
+                <div>
+                    <h1 class="font-bold text-base leading-tight">TSMC 核心單字記憶系統</h1>
+                    <p class="text-xs text-slate-400">雙語情境與間隔重複學習</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
+                <button onclick="switchTab('flashcard')" id="nav-flashcard" class="px-4 py-1.5 rounded-lg text-xs font-medium transition-all bg-brand-600 text-white shadow">
+                    單字卡訓練
+                </button>
+                <button onclick="switchTab('list')" id="nav-list" class="px-4 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white">
+                    單字庫總覽
+                </button>
+            </div>
         </div>
-        <div>
-          <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">
-            TSMC 職場與晶圓製造單字庫
-          </h1>
-          <p class="text-xs text-slate-400 hidden sm:block">晶圓廠/半導體專業詞彙 & 智慧間隔重複學習系統</p>
-        </div>
-      </div>
+    </header>
 
-      <!-- Navigation Tabs -->
-      <nav class="flex bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 text-xs sm:text-sm">
-        <button id="nav-flashcards" onclick="switchTab('flashcards')" class="px-3 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 bg-cyan-600 text-white shadow">
-          <i class="fa-solid fa-clone"></i>
-          <span>單字卡</span>
-        </button>
-        <button id="nav-quiz" onclick="switchTab('quiz')" class="px-3 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 text-slate-400 hover:text-slate-200">
-          <i class="fa-solid fa-brain"></i>
-          <span>間隔重複測驗</span>
-        </button>
-        <button id="nav-list" onclick="switchTab('list')" class="px-3 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 text-slate-400 hover:text-slate-200">
-          <i class="fa-solid fa-list-check"></i>
-          <span>單字總覽</span>
-        </button>
-      </nav>
-    </div>
-  </header>
+    <!-- Main Container -->
+    <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-8 flex flex-col justify-center">
 
-  <!-- DASHBOARD STATS BANNER -->
-  <section class="bg-slate-900/50 border-b border-slate-800/80 py-3">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4 text-xs sm:text-sm">
-      <div class="flex items-center space-x-6">
-        <div class="flex items-center space-x-2">
-          <span class="text-slate-400">總單字量:</span>
-          <span id="stat-total" class="font-bold text-slate-200 text-base">288</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> 已精通:</span>
-          <span id="stat-mastered" class="font-bold text-emerald-400 text-base">0</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-amber-400"><i class="fa-solid fa-clock-rotate-left"></i> 學習中:</span>
-          <span id="stat-learning" class="font-bold text-amber-400 text-base">0</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="text-rose-400"><i class="fa-solid fa-triangle-exclamation"></i> 高頻錯題:</span>
-          <span id="stat-errors" class="font-bold text-rose-400 text-base">0</span>
-        </div>
-      </div>
+        <!-- Tab 1: Flashcard / Quiz View -->
+        <section id="view-flashcard" class="space-y-6">
+            <!-- Stats Dashboard -->
+            <div class="grid grid-cols-4 gap-3">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-center">
+                    <div class="text-xs text-slate-400 mb-1">總單字數</div>
+                    <div id="stat-total" class="text-lg font-bold text-white">288</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-center">
+                    <div class="text-xs text-slate-400 mb-1">已掌握</div>
+                    <div id="stat-mastered" class="text-lg font-bold text-emerald-400">0</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-center">
+                    <div class="text-xs text-slate-400 mb-1">錯題累積</div>
+                    <div id="stat-errors" class="text-lg font-bold text-rose-400">0</div>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 text-center">
+                    <div class="text-xs text-slate-400 mb-1">進度</div>
+                    <div id="stat-progress" class="text-lg font-bold text-cyan-400">0%</div>
+                </div>
+            </div>
 
-      <div class="flex items-center space-x-3 w-full sm:w-auto">
-        <div class="w-full sm:w-48 bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
-          <div id="overall-progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
-        </div>
-        <span id="stat-percent" class="text-xs font-mono font-bold text-cyan-400 min-w-[3rem]">0%</span>
-        <button onclick="confirmResetProgress()" class="text-slate-400 hover:text-rose-400 text-xs px-2 py-1 border border-slate-700 hover:border-rose-500/50 rounded transition" title="重置學習紀錄">
-          <i class="fa-solid fa-rotate-right"></i>
-        </button>
-      </div>
-    </div>
-  </section>
+            <!-- Flashcard Container -->
+            <div class="perspective-1000 w-full h-[420px] cursor-pointer" onclick="flipCard()">
+                <div id="card-inner" class="relative w-full h-full duration-500 transform-style-3d shadow-2xl rounded-2xl">
+                    
+                    <!-- Front Side -->
+                    <div class="absolute inset-0 w-full h-full bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between backface-hidden">
+                        <div class="flex justify-between items-center">
+                            <span id="card-pos" class="px-3 py-1 bg-brand-500/10 text-brand-400 text-xs font-semibold rounded-full border border-brand-500/20">--</span>
+                            <div class="flex items-center space-x-2">
+                                <span id="error-badge" class="hidden px-2.5 py-0.5 bg-rose-500/10 text-rose-400 text-xs rounded-full border border-rose-500/20">錯題 0 次</span>
+                                <button onclick="event.stopPropagation(); playAudio();" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                                </button>
+                            </div>
+                        </div>
 
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+                        <div class="text-center space-y-2">
+                            <h2 id="card-word" class="text-4xl font-extrabold tracking-tight text-white">Loading...</h2>
+                            <p class="text-xs text-slate-500">點擊卡片翻轉查看中文與例句</p>
+                        </div>
 
-    <!-- 1. FLASHCARD TAB -->
-    <div id="tab-flashcards-content" class="space-y-6">
-      <!-- Filter Controls for Flashcard Mode -->
-      <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
-        <div class="flex items-center space-x-3">
-          <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">篩選範圍:</label>
-          <select id="flashcard-filter" onchange="initFlashcardSession()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-cyan-500">
-            <option value="all">全部單字 (288)</option>
-            <option value="learning">學習中 / 未精通</option>
-            <option value="error">高頻錯題 (錯題數 ≥ 1)</option>
-            <option value="mastered">已精通單字</option>
-            <option value="semiconductor">重點半導體專有名詞</option>
-          </select>
-        </div>
+                        <div class="text-center text-xs text-slate-400">
+                            ( 點擊任意處翻牌 )
+                        </div>
+                    </div>
 
-        <!-- Mode Toggle: Context Switcher -->
-        <div class="flex items-center space-x-2 bg-slate-800/80 p-1 rounded-lg border border-slate-700 text-xs">
-          <span class="text-slate-400 px-2 font-medium">預設展示例句:</span>
-          <button id="btn-ctx-fab" onclick="setDefaultContext('fab')" class="px-2.5 py-1 rounded-md transition font-medium bg-cyan-600 text-white">
-            <i class="fa-solid fa-industry mr-1"></i>晶圓製造情境
-          </button>
-          <button id="btn-ctx-daily" onclick="setDefaultContext('daily')" class="px-2.5 py-1 rounded-md transition font-medium text-slate-400 hover:text-slate-200">
-            <i class="fa-solid fa-mug-hot mr-1"></i>日常生活情境
-          </button>
-        </div>
-      </div>
+                    <!-- Back Side -->
+                    <div class="absolute inset-0 w-full h-full bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between backface-hidden rotate-y-180 overflow-y-auto">
+                        <div class="flex justify-between items-center">
+                            <span id="card-pos-back" class="px-3 py-1 bg-brand-500/10 text-brand-400 text-xs font-semibold rounded-full border border-brand-500/20">--</span>
+                            <span class="text-xs text-cyan-400 font-medium">釋義與情境例句</span>
+                        </div>
 
-      <!-- FLASHCARD DISPLAY -->
-      <div class="max-w-2xl mx-auto my-8">
-        <div id="card-container" class="perspective-1000 w-full cursor-pointer h-[420px] sm:h-[400px]">
-          <div id="flashcard" onclick="flipCard()" class="relative w-full h-full duration-500 transform-style-3d shadow-2xl rounded-3xl bg-slate-900 border border-slate-700 hover:border-slate-600">
+                        <div class="space-y-4 my-auto">
+                            <div class="text-center">
+                                <h3 id="card-word-back" class="text-2xl font-bold text-white mb-1">--</h3>
+                                <p id="card-meaning" class="text-xl font-medium text-cyan-300">--</p>
+                            </div>
+
+                            <!-- Context Selector -->
+                            <div class="flex justify-center space-x-2 border-t border-slate-800 pt-3">
+                                <button onclick="event.stopPropagation(); switchContext('daily')" id="btn-daily" class="px-3 py-1 rounded text-xs font-medium bg-brand-600 text-white transition">日常生活例句</button>
+                                <button onclick="event.stopPropagation(); switchContext('fab')" id="btn-fab" class="px-3 py-1 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">晶圓製造例句</button>
+                            </div>
+
+                            <div class="bg-slate-950/60 rounded-xl p-3.5 border border-slate-800/80 space-y-1.5">
+                                <p id="card-sentence" class="text-sm text-slate-200 italic">--</p>
+                                <p id="card-sentence-zh" class="text-xs text-slate-400 font-medium">--</p>
+                            </div>
+                        </div>
+
+                        <div class="text-center text-xs text-slate-500">
+                            請評估你對這個單字的熟悉程度
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="handleAnswer(false)" class="py-3 px-4 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-semibold rounded-xl transition flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <span>記錯 / 不熟 (加強出現)</span>
+                </button>
+                <button onclick="handleAnswer(true)" class="py-3 px-4 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold rounded-xl transition flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span>記得 / 答對 (降低頻率)</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Tab 2: Vocabulary List View -->
+        <section id="view-list" class="hidden space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-lg text-white">全部單字清單 (288字)</h3>
+                <input type="text" id="search-input" oninput="filterVocabulary()" placeholder="搜尋英文或中文..." class="bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-brand-500 w-48">
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden max-h-[550px] overflow-y-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/90 sticky top-0 border-b border-slate-800 text-xs text-slate-400">
+                        <tr>
+                            <th class="p-3">#</th>
+                            <th class="p-3">單字</th>
+                            <th class="p-3">詞性與中文</th>
+                            <th class="p-3 text-center">錯題數</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vocab-table-body" class="divide-y divide-slate-800/60 text-sm">
+                        <!-- Dynamic rendered -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center text-xs text-slate-500 border-t border-slate-800/60 mt-auto">
+        TSMC Vocabulary Learning System &copy; 2026 | Spaced Repetition Engine
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // 288 TSMC Vocabulary Dataset with Daily & Wafer Fab Examples (with Chinese Translation)
+        const vocabData = [
+            { id: 1, word: "ability", pos: "n.", meaning: "能力", daily: "She has the ability to solve complex problems.", dailyZh: "她有能力解決複雜的問題。", fab: "The tool has the ability to process 150 wafers per hour.", fabZh: "這台機台具有每小時處理 150 片晶圓的能力。" },
+            { id: 2, word: "abnormal", pos: "a.", meaning: "異常的", daily: "There is an abnormal sound coming from the engine.", dailyZh: "引擎傳出了異常的聲音。", fab: "An abnormal vibration was detected in chamber B during etching.", fabZh: "蝕刻期間在 B 腔室偵測到異常震動。" },
+            { id: 3, word: "abort", pos: "v.", meaning: "中止", daily: "We had to abort the trip because of heavy rain.", dailyZh: "因為大雨我們不得不中止這次旅行。", fab: "The operator had to abort the lot processing due to a gas leak.", fabZh: "由於氣體外洩，操作員不得不中止該批貨的處理。" },
+            { id: 4, word: "absence", pos: "n.", meaning: "缺席", daily: "His absence from the meeting was noticed.", dailyZh: "大家注意到他缺席了會議。", fab: "The absence of logs made it difficult to trace the root cause.", fabZh: "缺乏記錄使得追蹤根本原因變得困難。" },
+            { id: 5, word: "acid", pos: "n.", meaning: "酸", daily: "Lemons contain citric acid.", dailyZh: "檸檬含有檸檬酸。", fab: "Hydrofluoric acid is used to clean oxide layers on wafers.", fabZh: "氫氟酸可用於清洗晶圓上的氧化層。" },
+            { id: 6, word: "active", pos: "a.", meaning: "主動的", daily: "He plays an active role in community service.", dailyZh: "他在社區服務中扮演積極的角色。", fab: "The active layer of the transistor is extremely sensitive.", fabZh: "電晶體的效應層極其敏感。" },
+            { id: 7, word: "actual", pos: "a.", meaning: "真實的", daily: "What is the actual cost of this phone?", dailyZh: "這支手機的實際成本是多少？", fab: "The actual throughput was lower than expected.", fabZh: "實際產出量低於預期。" },
+            { id: 8, word: "add", pos: "v.", meaning: "增加", daily: "Please add some sugar to my coffee.", dailyZh: "請在我的咖啡裡加點糖。", fab: "Add a new recipe parameter for the updated thin film process.", fabZh: "為更新的薄膜製程新增一個參數設定。" },
+            { id: 9, word: "adjust", pos: "v.", meaning: "調整", daily: "You can adjust the height of this chair.", dailyZh: "你可以調整這張椅子的高度。", fab: "Technicians need to adjust the focus of the lithography scanner.", fabZh: "技術員需要調整微影曝光機的對焦。" },
+            { id: 10, word: "AI", pos: "n.", meaning: "人工智慧", daily: "AI is changing how we interact with technology.", dailyZh: "人工智慧正在改變我們與科技互動的方式。", fab: "AI algorithms help predict equipment failure before it happens.", fabZh: "AI 演算法有助於在設備故障發生前進行預測。" },
+            { id: 11, word: "air shower", pos: "n.", meaning: "潔淨通道", daily: "We stood in the air shower to blow off dust.", dailyZh: "我們站在氣洗淋浴間吹除灰塵。", fab: "All personnel must pass through the air shower before entering the cleanroom.", fabZh: "所有人員進入無塵室前都必須通過潔淨通道氣洗。" },
+            { id: 12, word: "alarm", pos: "n.", meaning: "警報", daily: "The smoke alarm went off in the kitchen.", dailyZh: "廚房裡的煙霧警報器響了。", fab: "A high-temperature alarm was triggered in furnace oven 3.", fabZh: "3號擴散爐管觸發了高溫警報。" },
+            { id: 13, word: "alert", pos: "n.", meaning: "警報", daily: "Receive an instant alert when your package arrives.", dailyZh: "當包裹送達時會收到即時提醒。", fab: "The system sent an email alert to the duty engineer.", fabZh: "系統向值班工程師發送了電子郵件警示。" },
+            { id: 14, word: "align", pos: "v.", meaning: "對焦", daily: "Make sure the pictures align properly on the wall.", dailyZh: "確保牆上的畫框對齊。", fab: "The machine must align the wafer precisely with the photomask.", fabZh: "機台必須將晶圓與光罩進行精確對焦。" },
+            { id: 15, word: "annually", pos: "a.", meaning: "每年的", daily: "The festival takes place annually in summer.", dailyZh: "這個節日每年夏天舉辦一次。", fab: "Safety training is conducted annually for all employees.", fabZh: "所有員工每年都會進行一次安全培訓。" },
+            { id: 16, word: "area", pos: "n.", meaning: "區域", daily: "This area is designated for parking only.", dailyZh: "這個區域僅限停車。", fab: "Cleanroom area B requires full gowning.", fabZh: "無塵室 B 區要求完整著裝。" },
+            { id: 17, word: "attach", pos: "v.", meaning: "附上", daily: "Please attach your resume to the email.", dailyZh: "請將您的履歷附在信件中。", fab: "Attach the calibration report to the maintenance ticket.", fabZh: "將校正報告附加在維修工單上。" },
+            { id: 18, word: "audit", pos: "n.", meaning: "稽核、查核", daily: "The company undergoes an annual financial audit.", dailyZh: "公司每年接受一次財務稽核。", fab: "Quality auditors conducted an internal audit of the photolithography line.", fabZh: "品質稽核員對微影產線進行了內部查核。" },
+            { id: 19, word: "automatic", pos: "a.", meaning: "自動的", daily: "The doors open automatic when you approach.", dailyZh: "當你靠近時門會自動打開。", fab: "The automated material handling system moves pods between bays.", fabZh: "自動化晶圓搬運系統在各區之間移動晶圓盒。" },
+            { id: 20, word: "automotive", pos: "adj.", meaning: "汽車的", daily: "Automotive technology is shifting toward electric vehicles.", dailyZh: "汽車技術正轉向電動車發展。", fab: "These chips are certified for high-reliability automotive applications.", fabZh: "這些晶片已通過高可靠度車用應用認證。" },
+            { id: 21, word: "available", pos: "a.", meaning: "可使用的", daily: "Is this table available for dinner?", dailyZh: "這張桌子現在有空嗎？", fab: "The spare parts are available in the stocker.", fabZh: "備品目前可在自動儲存櫃中取得。" },
+            { id: 22, word: "average", pos: "n.", meaning: "平均", daily: "The average temperature this month is 25 degrees.", dailyZh: "這個月的平均溫度是 25 度。", fab: "Calculate the average cycle time for the past week.", fabZh: "計算過去一週的平均生產週期時間。" },
+            { id: 23, word: "backup", pos: "n.", meaning: "支援", daily: "Always keep a backup of your important files.", dailyZh: "隨時備份你的重要檔案。", fab: "We need system backup files in case of server failure.", fabZh: "我們需要系統備份檔案以防伺服器故障。" },
+            { id: 24, word: "bank", pos: "v.", meaning: "暫存", daily: "I need to visit the bank to deposit a check.", dailyZh: "我要去銀行存支票。", fab: "Wafers are banked in the stocker while waiting for measurement.", fabZh: "晶圓在等待量測時暫存於儲存櫃中。" },
+            { id: 25, word: "basic", pos: "a.", meaning: "基礎的", daily: "Let's review the basic rules of the game.", dailyZh: "讓我們複習一下遊戲的基本規則。", fab: "Operators must understand basic safety protocols.", fabZh: "操作員必須了解基本的安全規範。" },
+            { id: 26, word: "beam", pos: "n.", meaning: "光束", daily: "A beam of light pierced through the dark clouds.", dailyZh: "一道光束穿透了烏雲。", fab: "The electron beam lithography system creates sub-micron patterns.", fabZh: "電子束微影系統可製作次微米圖案。" },
+            { id: 27, word: "benchmark", pos: "n.", meaning: "標竿學習", daily: "Our service aims to benchmark against industry leaders.", dailyZh: "我們的服務旨在對標產業領導者。", fab: "Use this process yield as a benchmark for future runs.", fabZh: "以此製程良率作為未來批次的標竿。" },
+            { id: 28, word: "bottle", pos: "n.", meaning: "瓶子", daily: "Please recycle your plastic water bottle.", dailyZh: "請回收你的塑膠水瓶。", fab: "Chemical bottle levels must be checked before shift handover.", fabZh: "交接班前必須檢查化學藥液瓶的液位。" },
+            { id: 29, word: "bottom", pos: "n.", meaning: "底部", daily: "Sign your name at the bottom of the page.", dailyZh: "在頁面底部簽上你的名字。", fab: "Check the bottom of the cassette for any debris.", fabZh: "檢查晶片專用盒底部是否有異物殘留。" },
+            { id: 30, word: "broken", pos: "a.", meaning: "破掉的", daily: "Be careful not to step on the broken glass.", dailyZh: "小心不要踩到碎玻璃。", fab: "A broken wafer was found inside the transport pod.", fabZh: "在運輸晶圓盒內發現破損的晶圓。" },
+            { id: 31, word: "cancel", pos: "v.", meaning: "取消", daily: "I need to cancel my flight reservation.", dailyZh: "我需要取消機票預訂。", fab: "Cancel the lot run if contamination is detected.", fabZh: "若偵測到汙染，請取消該批貨的運轉。" },
+            { id: 32, word: "card", pos: "n.", meaning: "卡片", daily: "Swipe your ID card to open the door.", dailyZh: "刷你的識別證開門。", fab: "The traveler card accompanies the wafer lot through each station.", fabZh: "隨行卡伴隨晶圓批次通過每個站別。" },
+            { id: 33, word: "cart", pos: "n.", meaning: "手推車", daily: "He loaded the groceries onto a shopping cart.", dailyZh: "他將雜貨裝上購物車。", fab: "Use the ESD-safe cart to transport material pods.", fabZh: "使用防靜電手推車來運送材料傳送盒。" },
+            { id: 34, word: "cassette", pos: "n.", meaning: "晶片專用盒", daily: "Put the tape back into its cassette.", dailyZh: "把帶子放回卡式匣中。", fab: "Load the wafers securely into the plastic cassette.", fabZh: "將晶圓穩固地裝入塑膠晶片專用盒中。" },
+            { id: 35, word: "center", pos: "n.", meaning: "中心", daily: "The park is located right in the city center.", dailyZh: "公園位於市中心。", fab: "Measure the film thickness at the center and edge of the wafer.", fabZh: "在晶圓中心與邊緣量測薄膜厚度。" },
+            { id: 36, word: "certify", pos: "v.", meaning: "證實、認證", daily: "He is a certified Public Accountant.", dailyZh: "他是具備執照的會計師。", fab: "Operators must be certified before operating the ion implanter.", fabZh: "操作員必須獲得認證後才能操作離子植入機。" },
+            { id: 37, word: "change", pos: "v.", meaning: "更換", daily: "Remember to change your password regularly.", dailyZh: "記得定期更換密碼。", fab: "Change the process filter after every 500 runs.", fabZh: "每運轉 500 次後更換製程濾網。" },
+            { id: 38, word: "chart", pos: "n.", meaning: "圖表", daily: "Look at the sales chart for this quarter.", dailyZh: "看一下本季的銷售圖表。", fab: "SPC charts show that the etch rate is within control limits.", fabZh: "SPC 統計製程管制的圖表顯示蝕刻速率在管制界限內。" },
+            { id: 39, word: "check", pos: "v.", meaning: "檢查", daily: "Check your answers before submitting the test.", dailyZh: "交卷前檢查你的答案。", fab: "Check equipment status prior to starting production.", fabZh: "在開始生產前檢查設備狀態。" },
+            { id: 40, word: "chemical", pos: "n.", meaning: "化學、化學品", daily: "Store chemical products in a cool, dry place.", dailyZh: "將化學品存放於陰涼乾燥處。", fab: "Handle toxic chemicals with appropriate protective gear.", fabZh: "使用適當的防護裝備處理有毒化學品。" },
+            { id: 41, word: "chip", pos: "n.", meaning: "晶片", daily: "Potatoes were sliced thin to make potato chips.", dailyZh: "馬鈴薯切得很薄來做洋芋片。", fab: "Each silicon wafer contains hundreds of integrated chips.", fabZh: "每片矽晶圓包含數百個積體電路晶片。" },
+            { id: 42, word: "choose", pos: "v.", meaning: "挑選", daily: "Choose whichever color you like best.", dailyZh: "挑選任何你最喜歡的顏色。", fab: "Choose the correct recipe file for this product line.", fabZh: "為此產品線選擇正確的處方程式檔案。" },
+            { id: 43, word: "clean", pos: "v.", meaning: "清潔", daily: "Please clean your room before going out.", dailyZh: "出門前請把房間打掃乾淨。", fab: "Clean the quartz tube to remove residue buildup.", fabZh: "清潔石英管以清除殘留物的堆積。" },
+            { id: 44, word: "clean chamber", pos: "n.", meaning: "潔淨室", daily: "Air quality in the clean chamber must be strictly monitored.", dailyZh: "潔淨室內的空氣品質必須嚴格監控。", fab: "Perform a dry clean chamber cycle after coating processing.", fabZh: "鍍膜製程後執行腔室乾式清潔循環。" },
+            { id: 45, word: "clear", pos: "v.", meaning: "清除", daily: "Clear the table after you finish dinner.", dailyZh: "吃完晚飯後把桌子收拾乾淨。", fab: "Clear all error messages on the screen before restarting.", fabZh: "重新啟動前清除畫面上的所有錯誤訊息。" },
+            { id: 46, word: "collect", pos: "v.", meaning: "蒐集", daily: "Children collect stamps as a hobby.", dailyZh: "孩子們收集郵票作為興趣。", fab: "Collect defect data for failure analysis reporting.", fabZh: "蒐集缺陷資料以進行失效分析報告。" },
+            { id: 47, word: "color", pos: "n.", meaning: "顏色", daily: "Blue is my favorite color.", dailyZh: "藍色是我最喜歡的顏色。", fab: "Indicator color changes when the filter reaches saturation.", fabZh: "當濾網達到飽和時指示燈顏色會改變。" },
+            { id: 48, word: "comment", pos: "n.", meaning: "評論", daily: "Leave a comment below if you have any questions.", dailyZh: "如果有任何問題請在下方留言。", fab: "Add a shift comment in the log sheet regarding the stoppage.", fabZh: "在工作紀錄中新增關於停機的當班備註。" },
+            { id: 49, word: "company", pos: "n.", meaning: "公司", daily: "He works for a multinational tech company.", dailyZh: "他在一家跨國科技公司工作。", fab: "The company invests heavily in semiconductor R&D.", fabZh: "公司在半導體研發上投入大量資金。" },
+            { id: 50, word: "complete", pos: "v.", meaning: "完成", daily: "Complete the assignment by tomorrow morning.", dailyZh: "明天早上前完成這項作業。", fab: "Complete the mandatory safety training before entering fab.", fabZh: "進入廠區前必須完成強制性的安全培訓。" },
+            { id: 51, word: "computer", pos: "n.", meaning: "電腦", daily: "I use my computer for coding and design.", dailyZh: "我用電腦進行寫程式與設計。", fab: "The host computer controls automated wafer transport systems.", fabZh: "主電腦控制自動化晶圓運輸系統。" },
+            { id: 52, word: "concern", pos: "v.", meaning: "擔憂", daily: "Environmental concerns are growing worldwide.", dailyZh: "全球對環境問題的擔憂日益增加。", fab: "Yield loss is a major concern for this technology node.", fabZh: "良率損失是此技術節點的一大隱憂。" },
+            { id: 53, word: "confidential", pos: "a.", meaning: "機密的", daily: "Keep this document confidential.", dailyZh: "保持這份文件機密。", fab: "Semiconductor process recipes are highly confidential.", fabZh: "半導體製程處方極度機密。" },
+            { id: 54, word: "confirm", pos: "v.", meaning: "確認", daily: "Please confirm your flight details via email.", dailyZh: "請透過電子郵件確認您的航班細節。", fab: "Confirm wafer alignment before starting lithography exposure.", fabZh: "在開始微影曝光前確認晶圓對位。" },
+            { id: 55, word: "contamination", pos: "n.", meaning: "污染", daily: "Wash your hands to prevent food contamination.", dailyZh: "洗手以防食物遭受污染。", fab: "Particle contamination can ruin thousands of chips on a wafer.", fabZh: "微粒污染可能會毀掉晶圓上數千顆晶片。" },
+            { id: 56, word: "continue", pos: "v.", meaning: "繼續", daily: "Let's take a short break and then continue.", dailyZh: "我們休息一下然後繼續。", fab: "Do not continue processing if equipment alarms persist.", fabZh: "如果設備警報持續存在，請勿繼續生產。" },
+            { id: 57, word: "control", pos: "v.", meaning: "控制", daily: "Parents try to control children's screen time.", dailyZh: "父母試圖控制孩子們看螢幕的時間。", fab: "Process engineers control parameters tightly to ensure stability.", fabZh: "製程工程師嚴格控制參數以確保穩定性。" },
+            { id: 58, word: "copy", pos: "n.", meaning: "拷貝", daily: "Can I get a copy of this report?", dailyZh: "我可以拿一份這份報告的副本嗎？", fab: "Make a copy of the log file for troubleshooting.", fabZh: "複製一份記錄檔以便進行故障排除。" },
+            { id: 59, word: "count", pos: "v.", meaning: "計算", daily: "Count from one to ten in Japanese.", dailyZh: "用日文從一數到十。", fab: "Particle counters measure the dust count in the cleanroom.", fabZh: "微粒計數器測量無塵室內的灰塵數量。" },
+            { id: 60, word: "customer", pos: "n.", meaning: "客戶", daily: "We always put customer satisfaction first.", dailyZh: "我們始終把客戶滿意度放在第一位。", fab: "Deliver high-quality chips on schedule to meet customer demands.", fabZh: "按時交付高品質晶片以滿足客戶需求。" },
+            { id: 61, word: "cycle", pos: "n.", meaning: "週期", daily: "The washing machine has a fast wash cycle.", dailyZh: "洗衣機有一個快速洗滌行程。", fab: "Reduce cycle time to improve manufacturing efficiency.", fabZh: "縮短生產週期以提升製造效率。" },
+            { id: 62, word: "cycle time", pos: "n.", meaning: "生產週期", daily: "The cycle time for delivery is two days.", dailyZh: "配送的週期時間為兩天。", fab: "Monitoring cycle time helps identify bottlenecks in production.", fabZh: "監控生產週期有助於識別產線瓶頸。" },
+            { id: 63, word: "daily", pos: "a.", meaning: "每日的", daily: "Check your daily planner for appointments.", dailyZh: "查看你每日記事本上的約會。", fab: "Hold a daily morning meeting to discuss shift status.", fabZh: "每天開晨會討論當班狀況。" },
+            { id: 64, word: "data", pos: "n.", meaning: "資料", daily: "Save your data securely in the cloud.", dailyZh: "將你的資料安全地儲存在雲端。", fab: "Analyze production data to optimize process yields.", fabZh: "分析生產資料以優化製程良率。" },
+            { id: 65, word: "date", pos: "n.", meaning: "日期", daily: "What is today's date?", dailyZh: "今天的日期是多少？", fab: "The manufacture date is printed on the cassette label.", fabZh: "製造日期印在晶片盒標籤上。" },
+            { id: 66, word: "decline", pos: "v.", meaning: "減少", daily: "Sales began to decline in the fourth quarter.", dailyZh: "第四季銷售額開始下滑。", fab: "Yield may decline if chamber contamination increases.", fabZh: "如果腔室污染增加，良率可能會下降。" },
+            { id: 67, word: "defect", pos: "n.", meaning: "缺陷", daily: "Inspect the product for any surface defect.", dailyZh: "檢查產品是否有表面瑕疵。", fab: "Advanced inspection tools detect microscopic wafer defects.", fabZh: "先進檢驗工具可檢測微觀晶圓缺陷。" },
+            { id: 68, word: "delay", pos: "v.", meaning: "延遲", daily: "The train was delayed due to heavy fog.", dailyZh: "火車因濃霧而延誤。", fab: "Equipment breakdown caused a major delay in lot delivery.", fabZh: "設備故障導致批貨交期嚴重延誤。" },
+            { id: 69, word: "delete", pos: "v.", meaning: "刪除", daily: "Delete unnecessary files to free up space.", dailyZh: "刪除不需要的檔案以釋放空間。", fab: "Do not delete historical log files without authorization.", fabZh: "未經授權切勿刪除歷史記錄檔。" },
+            { id: 70, word: "diffusion", pos: "n.", meaning: "擴散製程", daily: "Heat causes the diffusion of molecules.", dailyZh: "熱會促使分子擴散。", fab: "The diffusion furnace introduces dopants into silicon wafers.", fabZh: "擴散爐將摻雜劑導入矽晶圓中。" },
+            { id: 71, word: "document", pos: "n.", meaning: "文件", daily: "Sign the document before leaving.", dailyZh: "離開前在文件上簽名。", fab: "Follow the standard operating procedure document strictly.", fabZh: "嚴格遵守標準作業程序文件。" },
+            { id: 72, word: "dry", pos: "a.", meaning: "乾的", daily: "Hang the wet clothes outside to dry.", dailyZh: "把濕衣服掛在外面晾乾。", fab: "Ensure the wafer surface is completely dry after wet etching.", fabZh: "確保晶圓表面在濕式蝕刻後完全乾燥。" },
+            { id: 73, word: "emergency", pos: "n.", meaning: "緊急情況", daily: "Call 119 in case of a medical emergency.", dailyZh: "遇醫療緊急情況請撥 119。", fab: "Press the emergency stop button if safety is compromised.", fabZh: "如果安全受到威脅，請按下緊急停止按鈕。" },
+            { id: 74, word: "emergency stop", pos: "n.", meaning: "緊急停止", daily: "Hit the emergency stop switch on the machine.", dailyZh: "按下機器上的緊急停止開關。", fab: "An emergency stop halts all mechanical movements immediately.", fabZh: "緊急停止會立即中止所有機械動作。" },
+            { id: 75, word: "engineer", pos: "n.", meaning: "工程師", daily: "Software engineers build web and mobile apps.", dailyZh: "軟體工程師建構網頁與行動應用程式。", fab: "Process engineers analyze yield parameters every morning.", fabZh: "製程工程師每天早上分析良率參數。" },
+            { id: 76, word: "enhance", pos: "v.", meaning: "增進", daily: "Good lighting can enhance room ambiance.", dailyZh: "良好的照明可以增進房間氛圍。", fab: "Enhance etch selectivity to protect underlying layers.", fabZh: "增進蝕刻選擇比以保護底層結構。" },
+            { id: 77, word: "enter", pos: "v.", meaning: "進入", daily: "Please knock before you enter the office.", dailyZh: "進入辦公室前請敲門。", fab: "Enter your username and password to log into the system.", fabZh: "輸入您的使用者名稱與密碼以登入系統。" },
+            { id: 78, word: "environment", pos: "n.", meaning: "環境", daily: "We must protect our natural environment.", dailyZh: "我們必須保護自然環境。", fab: "Cleanroom environment requires strict temperature and humidity control.", fabZh: "無塵室環境需要嚴格的溫濕度控制。" },
+            { id: 79, word: "equipment", pos: "n.", meaning: "設備", daily: "Gym equipment is available for all members.", dailyZh: "健身房設備供所有會員使用。", fab: "Maintain semiconductor equipment regularly to prevent downtime.", fabZh: "定期維護半導體設備以預防停機。" },
+            { id: 80, word: "error", pos: "n.", meaning: "錯誤", daily: "Check your spelling to avoid any error.", dailyZh: "檢查拼字以避免任何錯誤。", fab: "System error codes help technicians diagnose hardware issues.", fabZh: "系統錯誤代碼有助於技術員診斷硬體問題。" },
+            { id: 81, word: "etching", pos: "n.", meaning: "蝕刻製程", daily: "Glass etching is an intricate craft.", dailyZh: "玻璃蝕刻是一門繁複的手工藝。", fab: "Plasma etching removes unwanted material from the wafer.", fabZh: "電漿蝕刻可移除晶圓上不需要的材料。" },
+            { id: 82, word: "EUV", pos: "n.", meaning: "極紫外光", daily: "EUV technology revolutionized semiconductor lithography.", dailyZh: "EUV 技術徹底革新了半導體微影製程。", fab: "EUV scanners use extreme ultraviolet light to print tiny features.", fabZh: "EUV 曝光機使用極紫外光來印製微小特徵。" },
+            { id: 83, word: "event", pos: "n.", meaning: "事件", daily: "The annual company event takes place this Friday.", dailyZh: "公司年度活動在本週五舉行。", fab: "Log every equipment alarm event for later review.", fabZh: "記錄每個設備警報事件以便後續檢視。" },
+            { id: 84, word: "execute", pos: "v.", meaning: "執行", daily: "Execute the plan according to schedule.", dailyZh: "按時程執行計畫。", fab: "Execute the recipe on the etching tool carefully.", fabZh: "小心在蝕刻機台上執行處方程式。" },
+            { id: 85, word: "exit", pos: "n.", meaning: "退出", daily: "Find the nearest emergency exit.", dailyZh: "找到最近的緊急出口。", fab: "Exit the software program after saving your data.", fabZh: "儲存資料後退出軟體程式。" },
+            { id: 86, word: "fault", pos: "n.", meaning: "錯誤", daily: "It was my fault that we missed the bus.", dailyZh: "我們錯過公車是我的錯。", fab: "Identify the root cause of the equipment fault.", fabZh: "找出設備故障的根本原因。" },
+            { id: 87, word: "find", pos: "v.", meaning: "發現", daily: "Did you find your lost keys?", dailyZh: "你找到遺失的鑰匙了嗎？", fab: "Inspectors found minor scratches on the wafer edge.", fabZh: "檢驗員在晶圓邊緣發現輕微刮傷。" },
+            { id: 88, word: "floor", pos: "n.", meaning: "地板", daily: "Please sweep the kitchen floor.", dailyZh: "請打掃廚房地板。", fab: "Cleanroom floor must be kept dust-free at all times.", fabZh: "無塵室地板必須隨時保持無塵狀態。" },
+            { id: 89, word: "focus", pos: "n.", meaning: "焦點", daily: "Keep your focus on the main objective.", dailyZh: "將焦點放在主要目標上。", fab: "Adjust scanner focus to ensure sharp pattern definition.", fabZh: "調整曝光機焦點以確保清晰的圖案定義。" },
+            { id: 90, word: "follow", pos: "v.", meaning: "照做、跟隨", daily: "Follow the traffic signs carefully.", dailyZh: "小心遵守交通標誌。", fab: "Always follow standard operating procedures in the fab.", fabZh: "在廠區中務必遵守標準作業程序。" },
+            { id: 91, word: "freeze", pos: "v.", meaning: "凍結", daily: "Water will freeze when temperature drops below zero.", dailyZh: "當溫度降到零度以下時水會結冰。", fab: "Freeze recipe modifications pending engineering review.", fabZh: "在工程審查完成前暫停修改處方程式。" },
+            { id: 92, word: "full", pos: "a.", meaning: "滿的", daily: "The parking lot is full today.", dailyZh: "今天停車場停滿了。", fab: "The cassette is full with 25 wafers.", fabZh: "晶片盒已裝滿 25 片晶圓。" },
+            { id: 93, word: "function", pos: "n.", meaning: "功能", daily: "This button has a dual function.", dailyZh: "這個按鈕具備雙重功能。", fab: "Test the diagnostic function of the inspection tool.", fabZh: "測試檢驗工具的診斷功能。" },
+            { id: 94, word: "gas", pos: "n.", meaning: "氣體", daily: "Turn off the gas stove after cooking.", dailyZh: "煮完飯後關閉瓦斯爐。", fab: "Reactive gases are injected into the chamber during etching.", fabZh: "蝕刻期間會將反應氣體注入腔室中。" },
+            { id: 95, word: "glass", pos: "n.", meaning: "玻璃、鏡片", daily: "Drink a glass of water every morning.", dailyZh: "每天早上喝一杯水。", fab: "Optical glass lenses inside the scanner require careful cleaning.", fabZh: "曝光機內部的高精密光學鏡片需要小心清潔。" },
+            { id: 96, word: "gloves", pos: "n.", meaning: "手套", daily: "Wear rubber gloves when cleaning the bathroom.", dailyZh: "打掃浴室時請戴橡膠手套。", fab: "Cleanroom gloves prevent skin oils from contaminating wafers.", fabZh: "無塵室手套可防止皮膚油脂污染晶圓。" },
+            { id: 97, word: "grade", pos: "n.", meaning: "等級", daily: "He achieved top grade in mathematics.", dailyZh: "他在數學科獲得最高等級/分數。", fab: "Use electronic grade chemicals for semiconductor processing.", fabZh: "半導體製程應使用電子級化學品。" },
+            { id: 98, word: "green", pos: "n.", meaning: "綠色", daily: "The traffic light turned green.", dailyZh: "交通燈變成綠燈。", fab: "A green indicator light confirms equipment is ready.", fabZh: "綠色指示燈確認設備已準備就緒。" },
+            { id: 99, word: "group", pos: "n.", meaning: "群組", daily: "Divide the students into small groups.", dailyZh: "將學生分成小組。", fab: "The integration team works as a group to solve yield issues.", fabZh: "整合團隊以小組形式解決良率問題。" },
+            { id: 100, word: "handle", pos: "v.", meaning: "處理", daily: "She knows how to handle difficult clients.", dailyZh: "她知道如何處理困難的客戶。", fab: "Handle silicon wafers carefully with vacuum tweezers.", fabZh: "使用真空夾具小心拿取矽晶圓。" },
+            { id: 101, word: "hard-disk", pos: "n.", meaning: "硬盤", daily: "Back up your data to an external hard disk.", dailyZh: "將資料備份到外接硬碟中。", fab: "Machine logs are stored on the local hard disk drive.", fabZh: "機台記錄檔儲存於本地硬碟中。" },
+            { id: 102, word: "heavy", pos: "a.", meaning: "重的", daily: "This box is too heavy to lift alone.", dailyZh: "這個箱子太重了無法獨自搬起。", fab: "Heavy equipment is moved using specialized lifters.", fabZh: "重型設備需使用專用起重機具移動。" },
+            { id: 103, word: "helmet", pos: "n.", meaning: "安全帽", daily: "Wear a helmet when riding a bicycle.", dailyZh: "騎自行車時請戴安全帽。", fab: "Wear safety helmets in construction and sub-fab areas.", fabZh: "在建築與廠務次氣體區區域內請佩戴安全帽。" },
+            { id: 104, word: "help", pos: "v.", meaning: "幫助", daily: "Can you help me carry this bag?", dailyZh: "你能幫我提這個袋子嗎？", fab: "The support team helps resolve equipment downtime quickly.", fabZh: "支援團隊有助於快速解決設備停機問題。" },
+            { id: 105, word: "hold", pos: "v.", meaning: "暫停", daily: "Please hold on for a moment.", dailyZh: "請稍候片刻。", fab: "Place the wafer lot on hold due to particle inspection failure.", fabZh: "由於微粒檢驗未過，將該批晶圓予以暫停/批貨保留。" },
+            { id: 106, word: "hole", pos: "n.", meaning: "孔、洞", daily: "There is a small hole in my sock.", dailyZh: "我的襪子上有個小洞。", fab: "Etch micro-holes for contact plugs in the oxide layer.", fabZh: "在氧化層中蝕刻出用於接觸插塞的微孔。" },
+            { id: 107, word: "hot", pos: "a.", meaning: "熱的", daily: "Be careful, the soup is very hot.", dailyZh: "小心，湯非常燙。", fab: "Furnace tube temperature is extremely hot during oxidation.", fabZh: "氧化期間爐管溫度極高。" },
+            { id: 108, word: "impact", pos: "n.", meaning: "影響", daily: "Technology has a big impact on daily life.", dailyZh: "科技對日常生活有重大影響。", fab: "Assess the impact of chamber maintenance on product yield.", fabZh: "評估腔室維護對產品良率的影響。" },
+            { id: 109, word: "improve", pos: "v.", meaning: "改善", daily: "Practice daily to improve your English.", dailyZh: "每天練習以增進你的英文。", fab: "Implement new parameters to improve overall equipment efficiency.", fabZh: "實施新參數以改善整體設備效率。" },
+            { id: 110, word: "inform", pos: "v.", meaning: "通知", daily: "Please inform me when you arrive.", dailyZh: "抵達時請通知我。", fab: "Inform the shift supervisor immediately if an abnormal alarm occurs.", fabZh: "若發生異常警報，立即通知當班主管。" },
+            { id: 111, word: "information", pos: "n.", meaning: "資訊", daily: "Find more information on our website.", dailyZh: "在我們的網站上尋找更多資訊。", fab: "Access recipe information securely through the MES terminal.", fabZh: "透過製造執行系統終端機安全存取處方資訊。" },
+            { id: 112, word: "inhibition", pos: "n.", meaning: "禁止禁用", daily: "Chemical inhibition stops unwanted reactions.", dailyZh: "化學抑制作用可停止不需要的反應。", fab: "Process inhibition prevents sidewall etching during patterning.", fabZh: "製程抑制可防止圖案化過程中的側壁蝕刻。" },
+            { id: 113, word: "input", pos: "n.", meaning: "輸入", daily: "Input your password to unlock the screen.", dailyZh: "輸入密碼以解鎖螢幕。", fab: "Check material input specifications before starting the run.", fabZh: "在開始運轉前檢查材料輸入規格。" },
+            { id: 114, word: "inspect", pos: "v.", meaning: "檢查", daily: "Inspect the car before going on a long trip.", dailyZh: "長途旅行前檢查車輛。", fab: "Inspect wafers for surface defects using optical microscopes.", fabZh: "使用光學顯微鏡檢查晶圓表面缺陷。" },
+            { id: 115, word: "inspection", pos: "n.", meaning: "檢驗", daily: "Quality inspection is required before packaging.", dailyZh: "包裝前必須進行品質檢驗。", fab: "Post-etch inspection ensures critical dimensions are within specs.", fabZh: "蝕刻後檢驗可確保關鍵尺寸符合規格。" },
+            { id: 116, word: "instruction", pos: "n.", meaning: "指令", daily: "Follow the assembly instructions carefully.", dailyZh: "仔細遵循組裝指示。", fab: "The tool executes machine instructions sequentially.", fabZh: "機台依序執行機器指令。" },
+            { id: 117, word: "internet", pos: "n.", meaning: "網際網路", daily: "Connect to the internet via Wi-Fi.", dailyZh: "透過 Wi-Fi 連線到網際網路。", fab: "Internal fab network operates separately from the public internet.", fabZh: "廠內網路與公共網際網路獨立運作。" },
+            { id: 118, word: "interview", pos: "n.", meaning: "面試", daily: "She prepared well for her job interview.", dailyZh: "她為求職面試做了充分準備。", fab: "Engineering candidates must pass technical and HR interviews.", fabZh: "工程師候選人必須通過技術與人資面試。" },
+            { id: 119, word: "issue", pos: "v.", meaning: "發行、議題", daily: "The government issued a new travel warning.", dailyZh: "政府發布了新的旅遊警告。", fab: "Resolve the equipment hardware issue before resuming production.", fabZh: "在恢復生產前解決設備硬體問題。" },
+            { id: 120, word: "job", pos: "n.", meaning: "工作", daily: "He loves his job as a product designer.", dailyZh: "他很喜歡自己擔任產品設計師的工作。", fab: "The lot processing job was completed successfully.", fabZh: "批貨處理工作已順利完成。" },
+            { id: 121, word: "keep", pos: "v.", meaning: "保持", daily: "Keep your workspace clean and tidy.", dailyZh: "保持你的工作環境乾淨整潔。", fab: "Keep cleanroom doors closed to maintain air pressure.", fabZh: "保持無塵室門關閉以維持氣壓。" },
+            { id: 122, word: "keyboard", pos: "n.", meaning: "鍵盤", daily: "Wireless keyboards make typing convenient.", dailyZh: "無線鍵盤讓打字很方便。", fab: "Use the terminal keyboard to enter lot IDs.", fabZh: "使用終端機鍵盤輸入批號。" },
+            { id: 123, word: "label", pos: "n.", meaning: "標籤", daily: "Read the warning label on the bottle.", dailyZh: "閱讀瓶子上的警告標籤。", fab: "Barcode labels on cassettes ensure correct wafer tracking.", fabZh: "晶片盒上的條碼標籤確保正確的晶圓追蹤。" },
+            { id: 124, word: "laboratory", pos: "n.", meaning: "實驗室", daily: "Scientists conduct experiments in the laboratory.", dailyZh: "科學家在實驗室進行實驗。", fab: "R&D laboratory develops next-generation semiconductor processes.", fabZh: "研發實驗室開發次世代半導體製程。" },
+            { id: 125, word: "leader", pos: "n.", meaning: "組長", daily: "She is a natural team leader.", dailyZh: "她是天生的團隊領導者。", fab: "Shift leaders coordinate daily production schedules.", fabZh: "班長協調每日生產排程。" },
+            { id: 126, word: "learn", pos: "v.", meaning: "學習", daily: "It is never too old to learn new skills.", dailyZh: "學習新技能永遠不嫌老。", fab: "Operators learn new standard operating procedures quickly.", fabZh: "操作員能迅速學習新的標準作業程序。" },
+            { id: 127, word: "level", pos: "n.", meaning: "程度", daily: "Noise level should be kept low in the library.", dailyZh: "圖書館內應保持低音量。", fab: "Chemical tank levels must be monitored continuously.", fabZh: "化學槽液位必須持續監控。" },
+            { id: 128, word: "lift", pos: "v.", meaning: "抬起、舉起", daily: "Lift with your legs, not your back.", dailyZh: "用腿部力量抬起，而不是背部。", fab: "Mechanical arms lift wafers gently out of the cassette.", fabZh: "機械手臂溫和地將晶圓從晶片盒中舉起。" },
+            { id: 129, word: "light", pos: "n.", meaning: "光", daily: "Turn off the lights when leaving the room.", dailyZh: "離開房間時關燈。", fab: "Yellow cleanroom lights prevent photoresist exposure.", fabZh: "黃色無塵室燈光可防止光阻曝光。" },
+            { id: 130, word: "line", pos: "n.", meaning: "直線", daily: "Draw a straight line using a ruler.", dailyZh: "用直尺畫一條直線。", fab: "Production line 7 runs 24 hours a day, 7 days a week.", fabZh: "第七生產線每周 7 天、每天 24 小時運轉。" },
+            { id: 131, word: "link", pos: "n.", meaning: "連結", daily: "Click the link below to view details.", dailyZh: "點擊下方連結查看詳細資訊。", fab: "Verify the network link between MES and equipment.", fabZh: "驗證製造執行系統與設備之間的網路連結。" },
+            { id: 132, word: "liquid", pos: "n.", meaning: "液體", daily: "Drink plenty of liquid during hot weather.", dailyZh: "天氣熱時多喝液體/水分。", fab: "Liquid chemical waste must be treated before disposal.", fabZh: "液體化學廢棄物在排放前必須經過處理。" },
+            { id: 133, word: "list", pos: "n.", meaning: "清單", daily: "Make a shopping list before going to the supermarket.", dailyZh: "去超市前列一張購物清單。", fab: "Review the maintenance task list before starting shift.", fabZh: "交接班前檢視維護工作清單。" },
+            { id: 134, word: "lithography", pos: "n.", meaning: "黃光/微影製程", daily: "Lithography is an ancient printing art.", dailyZh: "石版印刷是一門古老的印刷藝術。", fab: "Lithography transfers circuit patterns onto the wafer surface.", fabZh: "微影製程將電路圖案轉印到晶圓表面。" },
+            { id: 135, word: "load", pos: "v.", meaning: "上貨、裝載", daily: "Help me load boxes into the car.", dailyZh: "幫我把箱子裝到車上。", fab: "Load the wafer cassette into the load-lock chamber.", fabZh: "將晶圓專用盒裝載進入負載鎖定腔室。" },
+            { id: 136, word: "loading", pos: "n.", meaning: "負荷", daily: "Server loading is high during peak hours.", dailyZh: "尖峰時段伺服器負荷很高。", fab: "Monitor chamber loading effects during etching processes.", fabZh: "監控蝕刻製程中的負載效應。" },
+            { id: 137, word: "lobby", pos: "n.", meaning: "大廳", daily: "Meet me in the hotel lobby at 8 PM.", dailyZh: "晚上 8 點在飯店大廳見面。", fab: "Visitors must register at the fab security lobby.", fabZh: "訪客必須在廠區安全大廳登記。" },
+            { id: 138, word: "location", pos: "n.", meaning: "位置", daily: "Share your live location on Google Maps.", dailyZh: "在 Google 地圖上分享你的即時位置。", fab: "Identify the exact physical location of the malfunctioning sensor.", fabZh: "找出故障感測器的確切實體位置。" },
+            { id: 139, word: "lock", pos: "v.", meaning: "鎖住", daily: "Lock the front door before you sleep.", dailyZh: "睡覺前把前門鎖上。", fab: "Safety interlocks lock the chamber door during high voltage.", fabZh: "高壓期間安全聯鎖會將腔室門鎖住。" },
+            { id: 140, word: "log sheet", pos: "n.", meaning: "工作紀錄", daily: "Keep a log sheet of daily expenses.", dailyZh: "保留一份每日開銷的工作紀錄/日誌。", fab: "Record equipment readings on the shift log sheet.", fabZh: "將設備讀數記錄在當班工作紀錄表上。" },
+            { id: 141, word: "lose", pos: "v.", meaning: "遺失", daily: "Don't lose your passport while traveling.", dailyZh: "旅行時不要弄丟護照。", fab: "Proper handling ensures operators do not lose wafers.", fabZh: "正確操作可確保操作員不會遺失晶圓。" },
+            { id: 142, word: "lot", pos: "n.", meaning: "批貨", daily: "We bought a lot of items on sale.", dailyZh: "我們在大拍賣時買了很多東西。", fab: "A standard wafer lot typically consists of 25 wafers.", fabZh: "一個標準晶圓批次通常包含 25 片晶圓。" },
+            { id: 143, word: "machine", pos: "n.", meaning: "機器", daily: "This coffee machine makes great espresso.", dailyZh: "這台咖啡機煮的濃縮咖啡很棒。", fab: "Etching machines operate under high vacuum conditions.", fabZh: "蝕刻機器在高真空條件下運作。" },
+            { id: 144, word: "maintain", pos: "v.", meaning: "維護", daily: "Regular exercise helps maintain good health.", dailyZh: "規律運動有助於維持身體健康。", fab: "Engineers maintain the ion implanter to ensure beam stability.", fabZh: "工程師維護離子植入機以確保離子束穩定性。" },
+            { id: 145, word: "manual", pos: "a.", meaning: "手動的", daily: "Refer to the user manual for instructions.", dailyZh: "參考使用手冊中的說明。", fab: "Switch from automatic to manual mode for troubleshooting.", fabZh: "切換為手動模式以進行故障排除。" },
+            { id: 146, word: "manufacture", pos: "v.", meaning: "製造", daily: "The factory manufactures electronic components.", dailyZh: "這間工廠製造電子零件。", fab: "TSMC manufactures advanced chips for global tech companies.", fabZh: "台積電為全球科技公司製造先進晶片。" },
+            { id: 147, word: "mark", pos: "n.", meaning: "記號", daily: "Leave a bookmark on your reading page.", dailyZh: "在你的閱讀頁面上留個書籤記號。", fab: "Alignment marks guide the lithography scanner precisely.", fabZh: "對位記號引導微影曝光機進行精準定位。" },
+            { id: 148, word: "mask", pos: "n.", meaning: "光罩、口罩", daily: "Wear a protective face mask in crowded places.", dailyZh: "在擁擠場所佩戴防護口罩。", fab: "Photomasks contain circuit patterns transferred to wafers.", fabZh: "光罩包含要轉印到晶圓上的電路圖案。" },
+            { id: 149, word: "material", pos: "n.", meaning: "原料", daily: "Recycle paper and plastic material.", dailyZh: "回收紙張與塑膠材料。", fab: "High-purity silicon is the primary material for IC manufacturing.", fabZh: "高純度矽是積體製造的主要原料。" },
+            { id: 150, word: "measure", pos: "v.", meaning: "量測", daily: "Measure the room size before buying furniture.", dailyZh: "買家具前先量房間尺寸。", fab: "Optical tools measure critical dimensions of nano-features.", fabZh: "光學工具量測奈米特徵的關鍵尺寸。" },
+            { id: 151, word: "mechanical", pos: "a.", meaning: "機械的", daily: "He studies mechanical engineering in college.", dailyZh: "他在大學主修機械工程。", fab: "Mechanical robots handle wafer transfer safely.", fabZh: "機械手臂安全地處理晶圓轉移。" },
+            { id: 152, word: "merge", pos: "v.", meaning: "合併", daily: "The two companies decided to merge.", dailyZh: "這兩家公司決定合併。", fab: "Merge data from different inspection stations for analysis.", fabZh: "合併來自不同檢驗站的資料以進行分析。" },
+            { id: 153, word: "message", pos: "n.", meaning: "訊息", daily: "Send me a message when you get home.", dailyZh: "你到家後傳個訊息給我。", fab: "System messages notify operators of completed runs.", fabZh: "系統訊息會通知操作員運轉已完成。" },
+            { id: 154, word: "metal", pos: "n.", meaning: "金屬", daily: "Gold and copper are precious metals.", dailyZh: "黃金與銅是貴金屬。", fab: "Aluminum and copper layers form metal interconnects on chips.", fabZh: "鋁與銅層在晶片上形成金屬互連線。" },
+            { id: 155, word: "miss-operation", pos: "n.", meaning: "錯誤動作", daily: "Careless driving is a major cause of miss-operation accidents.", dailyZh: "粗心駕駛是操作失誤意外的主因。", fab: "Strict interlocks prevent operator miss-operation in the fab.", fabZh: "嚴格的聯鎖機制可防止廠區內的操作員失誤。" },
+            { id: 156, word: "monitor", pos: "v.", meaning: "監視器、測機", daily: "Monitor your computer display for updates.", dailyZh: "監控你的電腦顯示器以獲取更新。", fab: "Monitor wafers are run to check tool performance stability.", fabZh: "執行測機晶圓以檢查機台性能穩定性。" },
+            { id: 157, word: "monthly", pos: "a.", meaning: "每月的", daily: "Review your monthly budget regularly.", dailyZh: "定期檢視你的每月預算。", fab: "Conduct monthly calibration of measurement instruments.", fabZh: "每月對量測儀器進行校正。" },
+            { id: 158, word: "more", pos: "a.", meaning: "更多的", daily: "Would you like more coffee?", dailyZh: "你想要更多咖啡嗎？", fab: "Advanced nodes require more mask layers and processing steps.", fabZh: "先進節點需要更多的光罩層數與製程步驟。" },
+            { id: 159, word: "move", pos: "v.", meaning: "移動、產出", daily: "Let's move to the next topic.", dailyZh: "我們移動到下個話題吧。", fab: "Fab daily move count measures total wafers processed.", fabZh: "晶圓廠的每日產出量計算處理的總晶圓數。" },
+            { id: 160, word: "new", pos: "a.", meaning: "新的", daily: "She bought a new smartphone.", dailyZh: "她買了一支新智慧型手機。", fab: "Install new software version for the lithography scanner.", fabZh: "為微影曝光機安裝新軟體版本。" },
+            { id: 161, word: "normal", pos: "a.", meaning: "正常的", daily: "Temperature is within normal range.", dailyZh: "溫度在正常範圍內。", fab: "All parameters returned to normal after calibration.", fabZh: "校正後所有參數皆恢復正常。" },
+            { id: 162, word: "note", pos: "n.", meaning: "註解", daily: "Take notes during the lecture.", dailyZh: "上課時做筆記。", fab: "Read engineering notes before running special lots.", fabZh: "在執行特殊批貨前閱讀工程註解。" },
+            { id: 163, word: "notice", pos: "n.", meaning: "通知", daily: "The office will be closed with short notice.", dailyZh: "辦公室將在短暫通知後關閉。", fab: "Post a maintenance notice on the equipment console.", fabZh: "在設備控制台上張貼維護通知。" },
+            { id: 164, word: "number", pos: "n.", meaning: "號碼", daily: "What is your telephone number?", dailyZh: "你的電話號碼是多少？", fab: "Lot numbers must be scanned correctly into MES.", fabZh: "批號必須正確掃描登入製造執行系統。" },
+            { id: 165, word: "office", pos: "n.", meaning: "辦公室", daily: "My office is on the third floor.", dailyZh: "我的辦公室在三樓。", fab: "Engineers return to the office to analyze yield data.", fabZh: "工程師返回辦公室分析良率資料。" },
+            { id: 166, word: "off-line", pos: "a.", meaning: "離線的", daily: "Download songs for off-line listening.", dailyZh: "下載歌曲以便離線聆聽。", fab: "Take the tool off-line for scheduled preventive maintenance.", fabZh: "將機台離線以進行排定的預防性保養。" },
+            { id: 167, word: "on time", pos: "ph.", meaning: "準時", daily: "Try to arrive at the meeting on time.", dailyZh: "開會試著準時到達。", fab: "Deliver semiconductor products on time to customers.", fabZh: "準時向客戶交付半導體產品。" },
+            { id: 168, word: "on-line", pos: "a.", meaning: "在線的", daily: "Submit your assignment on-line.", dailyZh: "在線上繳交你的作業。", fab: "Keep the monitoring system on-line during production.", fabZh: "生產期間保持監控系統在線運作。" },
+            { id: 169, word: "operation", pos: "n.", meaning: "操作", daily: "Machine operation requires proper training.", dailyZh: "機器操作需要適當的培訓。", fab: "Smooth fab operation depends on teamwork and discipline.", fabZh: "順暢的廠區運作仰賴團隊合作與紀律。" },
+            { id: 170, word: "output", pos: "n.", meaning: "輸出", daily: "Solar panels convert sunlight into electrical output.", dailyZh: "太陽能板將陽光轉換成電力輸出。", fab: "Daily fab output increased due to higher tool uptime.", fabZh: "由於機台運作時間增加，每日產出量提升。" },
+            { id: 171, word: "oven", pos: "n.", meaning: "烤箱", daily: "Bake cookies in the oven at 180 degrees.", dailyZh: "以 180 度在烤箱中烘烤餅乾。", fab: "Bake wafers in the diffusion oven to cure photoresist.", fabZh: "在擴散烤箱中烘烤晶圓以固化光阻。" },
+            { id: 172, word: "over time", pos: "ph.", meaning: "加班", daily: "He worked over time to finish the project.", dailyZh: "他為了完成專案而加班。", fab: "Engineers worked over time to resolve urgent yield issues.", fabZh: "工程師為了處理緊急良率問題而加班。" },
+            { id: 173, word: "page", pos: "n.", meaning: "頁數", daily: "Read page 45 for homework.", dailyZh: "閱讀第 45 頁作為作業。", fab: "Check the reference page in the engineering manual.", fabZh: "查看工程手冊中的參考頁面。" },
+            { id: 174, word: "paper", pos: "n.", meaning: "紙張", daily: "Write your name on a piece of paper.", dailyZh: "在一張紙上寫上你的名字。", fab: "Cleanroom paper is specially treated to prevent lint.", fabZh: "無塵室專用紙張經過特殊處理以防起毛絮。" },
+            { id: 175, word: "parameter", pos: "n.", meaning: "參數", daily: "Adjust temperature and humidity parameters.", dailyZh: "調整溫濕度參數。", fab: "Set etch parameters correctly to achieve desired depth.", fabZh: "正確設定蝕刻參數以達到所需的深度。" },
+            { id: 176, word: "part", pos: "n.", meaning: "零件", daily: "Replace the broken bicycle part.", dailyZh: "替換壞掉的腳踏車零件。", fab: "Spare parts are stored in the cleanroom stockroom.", fabZh: "備品存放於無塵室儲藏室中。" },
+            { id: 177, word: "particle", pos: "n.", meaning: "微粒", daily: "Air filters catch dust and particle in the room.", dailyZh: "空氣濾網捕捉室內的灰塵與微粒。", fab: "Particles on wafers cause circuit short circuits and defects.", fabZh: "晶圓上的微粒會造成電路短路與缺陷。" },
+            { id: 178, word: "pass", pos: "v.", meaning: "合格", daily: "She studied hard and passed the exam.", dailyZh: "她認真讀書並通過了考試。", fab: "Wafers must pass electrical testing before packaging.", fabZh: "晶圓在包裝前必須通過電性測試。" },
+            { id: 179, word: "password", pos: "n.", meaning: "密碼", daily: "Create a strong password for your account.", dailyZh: "為你的帳號建立一個強密碼。", fab: "Never share your computer access password with others.", fabZh: "切勿與他人分享你的電腦存取密碼。" },
+            { id: 180, word: "perfect", pos: "a.", meaning: "完美的", daily: "Today is a perfect day for a picnic.", dailyZh: "今天是野餐的完美日子。", fab: "Achieving zero defects is the ultimate goal, though perfection is tough.", fabZh: "達到零缺陷是終極目標，雖然完美很難。" },
+            { id: 181, word: "personal", pos: "a.", meaning: "個人的", daily: "Keep personal items in your locker.", dailyZh: "將個人物品放在置物櫃中。", fab: "Personal protective equipment is mandatory in fab areas.", fabZh: "在廠區中個人防護裝備是強制規定的。" },
+            { id: 182, word: "phase", pos: "n.", meaning: "階段", daily: "The project is now in its final phase.", dailyZh: "專案目前處於最後階段。", fab: "Phase one of the new fab construction is complete.", fabZh: "新廠房建設的第一階段已完成。" },
+            { id: 183, word: "photo", pos: "n.", meaning: "相片", daily: "Take a photo to remember this moment.", dailyZh: "拍張照記下這個時刻。", fab: "Photoresist coatings are applied prior to exposure.", fabZh: "光阻塗層在曝光前施加。" },
+            { id: 184, word: "plan", pos: "n.", meaning: "計劃", daily: "Make a study plan for the exam.", dailyZh: "為考試制定讀書計畫。", fab: "Review the production plan for the upcoming week.", fabZh: "檢視接下來一週的生產計畫。" },
+            { id: 185, word: "plus", pos: "prep.", meaning: "加上", daily: "Two plus two equals four.", dailyZh: "二加二等於四。", fab: "Add plus-tolerance limits to the specification sheet.", fabZh: "將正公差極限加入規範表中。" },
+            { id: 186, word: "pod", pos: "n.", meaning: "晶片傳送盒", daily: "Whales travel together in a pod.", dailyZh: "鯨魚成群結隊旅行。", fab: "FOUP pods protect wafers from contamination during transit.", fabZh: "前開式晶圓傳送盒可在運送過程中保護晶圓免受污染。" },
+            { id: 187, word: "point", pos: "n.", meaning: "點", daily: "He made a very good point in the meeting.", dailyZh: "他在會議中提出了很好的觀點。", fab: "Check measurement points across the wafer surface.", fabZh: "檢查晶圓表面各個量測點。" },
+            { id: 188, word: "position", pos: "n.", meaning: "位置", daily: "Adjust your seat position for driving.", dailyZh: "調整你的駕駛座椅位置。", fab: "The robotic arm moves the wafer to the correct position.", fabZh: "機械手臂將晶圓移動到正確位置。" },
+            { id: 189, word: "positive", pos: "a.", meaning: "正向的", daily: "Keep a positive attitude toward challenges.", dailyZh: "對挑戰保持正向態度。", fab: "Photoresist is classified as positive or negative tone.", fabZh: "光阻被分類為正型或負型。" },
+            { id: 190, word: "postpone", v., meaning: "延期", daily: "We had to postpone the outdoor event due to rain.", dailyZh: "因為下雨我們不得不將戶外活動延期。", fab: "Postpone tool maintenance if urgent production is needed.", fabZh: "若需要緊急生產，可將機台維護延期。" },
+            { id: 191, word: "power", pos: "n.", meaning: "力量", daily: "Wind power is a clean energy source.", dailyZh: "風力發電是一種乾淨的能源。", fab: "Check power supply cables before turning on equipment.", fabZh: "開啟設備前檢查電源供應纜線。" },
+            { id: 192, word: "practice", pos: "v.", meaning: "練習", daily: "Practice speaking English every day.", dailyZh: "每天練習說英文。", fab: "Practice safety protocols during routine drills.", fabZh: "在例行演練中落實安全規範。" },
+            { id: 193, word: "prepare", pos: "v.", meaning: "準備", daily: "Prepare your presentation slides in advance.", dailyZh: "提前準備你的簡報投影片。", fab: "Prepare chemical solutions according to recipe instructions.", fabZh: "根據處方說明準備化學溶液。" },
+            { id: 194, word: "press", pos: "v.", meaning: "按下", daily: "Press the button to open the elevator door.", dailyZh: "按下按鈕打開電梯門。", fab: "Press start on the console to initiate the process run.", fabZh: "按下主控台上的啟動來開始製程運轉。" },
+            { id: 195, word: "pressure", pos: "n.", meaning: "壓力", daily: "Check tire pressure before driving.", dailyZh: "開車前檢查胎壓。", fab: "Chamber vacuum pressure must reach baseline before etching.", fabZh: "蝕刻前腔室真空壓力必須達到基準線。" },
+            { id: 196, word: "preview", pos: "n.", meaning: "預覽", daily: "Watch the movie preview online.", dailyZh: "線上觀看電影預告片。", fab: "Preview recipe settings before executing lot processing.", fabZh: "在執行批貨處理前預覽處方設定。" },
+            { id: 197, word: "price", pos: "n.", meaning: "價格", daily: "Check the price tag before buying.", dailyZh: "購買前檢查價格標籤。", fab: "Semiconductor manufacturing equipment commands a high price.", fabZh: "半導體製造設備造價昂貴。" },
+            { id: 198, word: "print", pos: "n.", meaning: "列印", daily: "Print a copy of the boarding pass.", dailyZh: "列印一份登機證。", fab: "Lithography systems print nano-scale circuits on silicon.", fabZh: "微影系統在矽晶圓上印製奈米級電路。" },
+            { id: 199, word: "priority", pos: "n.", meaning: "優先順序", daily: "Safety is always our top priority.", dailyZh: "安全始終是我們的首要任務。", fab: "Super hot run lots have highest priority in the fab.", fabZh: "超級急件批次在廠區中擁有最高優先順序。" },
+            { id: 200, word: "process", pos: "n.", meaning: "過程、流程", daily: "Learning a language is a gradual process.", dailyZh: "學習語言是一個漸進的過程。", fab: "Semiconductor fabrication involves hundreds of complex processes.", fabZh: "半導體製造包含數百個複雜製程。" },
+            { id: 201, word: "product", pos: "n.", meaning: "產品", daily: "The store launched a new product line.", dailyZh: "這家店推出了一系列新產品。", fab: "High-quality semiconductor products are shipped worldwide.", fabZh: "高品質的半導體產品銷往世界各地。" },
+            { id: 202, word: "protect", pos: "v.", meaning: "保護", daily: "Wear sunglasses to protect your eyes from UV.", dailyZh: "戴太陽眼鏡保護眼睛免受紫外線傷害。", fab: "Cleanroom garments protect wafers from human skin shedding.", fabZh: "無塵室衣物保護晶圓免受人體皮屑脫落污染。" },
+            { id: 203, word: "purge", pos: "v.", meaning: "清除", daily: "Purge old emails from your inbox.", dailyZh: "從收件匣中清除舊信件。", fab: "Purge the gas lines with nitrogen before maintenance.", fabZh: "維護前用氮氣吹驅/清除氣體管線。" },
+            { id: 204, word: "push", pos: "v.", meaning: "推進", daily: "Push the door to open.", dailyZh: "推門以打開。", fab: "Push the wafer carrier gently into the loading slot.", fabZh: "將晶圓載具輕輕推進載入槽中。" },
+            { id: 205, word: "quality", pos: "n.", meaning: "品質", daily: "We focus on delivering high quality service.", dailyZh: "我們專注於提供高品質的服務。", fab: "Quality control is critical for advanced semiconductor nodes.", fabZh: "品質管制對先進半導體節點至關重要。" },
+            { id: 206, word: "quantity", pos: "n.", meaning: "數量", daily: "Check the quantity of items delivered.", dailyZh: "檢查交付項目的數量。", fab: "Verify wafer quantity inside the cassette before processing.", fabZh: "加工前核對晶片盒內的晶圓數量。" },
+            { id: 207, word: "rate", pos: "n.", meaning: "比率", daily: "Inflation rate is monitored by economists.", dailyZh: "通貨膨脹率受到經濟學家的監控。", fab: "Deposition rate determines thin film thickness over time.", fabZh: "沉積速率決定了隨時間累積的薄膜厚度。" },
+            { id: 208, word: "re-certify", pos: "v.", meaning: "重新認證", daily: "Drivers need to re-certify their license periodically.", dailyZh: "駕駛需要定期重新認證駕照。", fab: "Operators must re-certify on tool operations every year.", fabZh: "操作員必須每年重新認證機台操作資格。" },
+            { id: 209, word: "recipe", pos: "n.", meaning: "食譜、處方程式", daily: "Follow the recipe to bake a delicious cake.", dailyZh: "按照食譜烤一個美味的蛋糕。", fab: "Load the correct recipe file for the specific wafer layer.", fabZh: "為特定的晶圓層載入正確的處方程式檔案。" },
+            { id: 210, word: "record", pos: "n.", meaning: "記錄", daily: "Keep a record of all your expenses.", dailyZh: "保留你所有開銷的記錄。", fab: "Inspectors record defect counts on the computer terminal.", fabZh: "檢驗員在電腦終端機上記錄缺陷數量。" },
+            { id: 211, word: "recover", pos: "v.", meaning: "復機", daily: "He took a few days off to recover from flu.", dailyZh: "他請假幾天以從流感中恢復。", fab: "Engineers work quickly to recover the tool after an alarm.", fabZh: "工程師快速工作以在警報後恢復機台運作。" },
+            { id: 212, word: "release", pos: "v.", meaning: "釋放", daily: "Release the brake pedal gently.", dailyZh: "輕輕放開煞車踏板。", fab: "Release the wafer lot from hold after quality check passes.", fabZh: "品質檢查通過後解除該批晶圓的暫停狀態。" },
+            { id: 213, word: "remark", pos: "n.", meaning: "註記", daily: "Add a remark at the end of the letter.", dailyZh: "在信件結尾加上註記。", fab: "Write a clear remark explaining the equipment downtime.", fabZh: "寫下清楚的註記來解釋設備停機原因。" },
+            { id: 214, word: "remind", pos: "v.", meaning: "提醒", daily: "Remind me to buy milk tomorrow.", dailyZh: "提醒我明天買牛奶。", fab: "System prompts remind operators to wear gloves.", fabZh: "系統提示提醒操作員配戴手套。" },
+            { id: 215, word: "remove", pos: "v.", meaning: "移開", daily: "Please remove your shoes before entering.", dailyZh: "進入前請脫鞋。", fab: "Chemical etching removes unwanted oxide layers.", fabZh: "化學蝕刻可移開/去除不需要的氧化層。" },
+            { id: 216, word: "repair", pos: "v.", meaning: "修理", daily: "Repair your bicycle tire if it is flat.", dailyZh: "如果腳踏車輪胎沒氣了就修理它。", fab: "Maintenance crew arrived to repair the broken robot arm.", fabZh: "維修人員抵達以修理損壞的機械手臂。" },
+            { id: 217, word: "report", pos: "n.", meaning: "報告", daily: "Submit your weekly report by Friday.", dailyZh: "在週五前繳交你的每週報告。", fab: "Generate a daily yield report for management review.", fabZh: "產生每日良率報告供管理階層審查。" },
+            { id: 218, word: "reset", pos: "v.", meaning: "重設", daily: "Reset your router if internet disconnects.", dailyZh: "如果網路斷線請重設路由器。", fab: "Reset the alarm after clearing the sensor error.", fabZh: "清除感測器錯誤後重設警報。" },
+            { id: 219, word: "rework", pos: "v.", meaning: "重做", daily: "Rework the design to meet client expectations.", dailyZh: "重新修改設計以符合客戶期望。", fab: "Defective wafers undergo rework if process allows.", fabZh: "若製程允許，有缺陷的晶圓將進行重工/重做。" },
+            { id: 220, word: "route", pos: "n.", meaning: "路線", daily: "Find the fastest route home.", dailyZh: "找出回家最快的路線。", fab: "Wafers follow a predefined routing through different fab bays.", fabZh: "晶圓按照預先定義好的路線流經不同的廠區bay。" },
+            { id: 221, word: "rule", pos: "n.", meaning: "規則", daily: "Follow the house rules.", dailyZh: "遵守房屋規則。", fab: "Strict cleanroom rules ensure high production yield.", fabZh: "嚴格的無塵室規則確保高生產良率。" },
+            { id: 222, word: "run", pos: "v.", meaning: "運轉、跑", daily: "Run every morning to stay healthy.", dailyZh: "每天早晨跑步保持健康。", fab: "Run the production batch according to standard recipe.", fabZh: "依照標準處方運轉生產批次。" },
+            { id: 223, word: "run-card", pos: "n.", meaning: "流程卡", daily: "Keep your checklist on a run card.", dailyZh: "把你的檢查清單記錄在流程卡上。", fab: "The physical run card travels with the wafer lot in the cassette.", fabZh: "實體流程卡與晶片盒中的晶圓批次一起移動。" },
+            { id: 224, word: "S.O.P", pos: "n.", meaning: "標準作業程序", daily: "Follow company SOP for administrative tasks.", dailyZh: "遵循公司行政作業的標準作業程序。", fab: "SOP compliance is mandatory for all fab technicians.", fabZh: "所有廠區技術員都必須強制遵守標準作業程序。" },
+            { id: 225, word: "safe", pos: "a.", meaning: "安全的", daily: "Wear a seatbelt to stay safe.", dailyZh: "繫好安全帶以保持安全。", fab: "Ensure tools are in a safe state before opening panels.", fabZh: "在打開機台面板前確保設備處於安全狀態。" },
+            { id: 226, word: "same", pos: "a.", meaning: "相同的", daily: "We wear the same shoes.", dailyZh: "我們穿相同的鞋子。", fab: "Every batch must follow the exact same process steps.", fabZh: "每批貨都必須遵循完全相同的製程步驟。" },
+            { id: 227, word: "save", pos: "v.", meaning: "儲存", daily: "Save your document frequently.", dailyZh: "經常儲存你的文件。", fab: "Save process logs to the central database server.", fabZh: "將製程記錄檔儲存至中央資料庫伺服器。" },
+            { id: 228, word: "scrap", pos: "n.", meaning: "報廢", daily: "Recycle metal scrap from manufacturing.", dailyZh: "回收製造過程中的金屬廢料。", fab: "Irreparable wafers are marked as scrap and discarded.", fabZh: "無法修復的晶圓會被標記為報廢並丟棄。" },
+            { id: 229, word: "scratch", pos: "v.", meaning: "刮傷", daily: "Be careful not to scratch the screen.", dailyZh: "小心不要刮傷螢幕。", fab: "Wafer surface scratches can cause integrated circuit failure.", fabZh: "晶圓表面刮傷會導致積體電路失效。" },
+            { id: 230, word: "screen", pos: "n.", meaning: "螢幕", daily: "Clean your phone screen with a microfiber cloth.", dailyZh: "用超細纖維布清潔你的手機螢幕。", fab: "Touch screens display real-time equipment status.", fabZh: "觸控螢幕顯示即時設備狀態。" },
+            { id: 231, word: "select", pos: "v.", meaning: "選擇", daily: "Select an option from the menu.", dailyZh: "從選單中選擇一個選項。", fab: "Select the appropriate recipe for the wafer lot.", fabZh: "為晶圓批次選擇適當的處方。" },
+            { id: 232, word: "semiconductor", pos: "n.", meaning: "半導體", daily: "Silicon is the most widely used semiconductor material.", dailyZh: "矽是最廣泛使用的半導體材料。", fab: "Semiconductor chips power modern electronic devices.", fabZh: "半導體晶片驅動了現代電子設備。" },
+            { id: 233, word: "service", pos: "n.", meaning: "服務", daily: "Customer service answers inquiries quickly.", dailyZh: "客服快速回覆詢問。", fab: "Schedule routine equipment service during weekends.", fabZh: "安排在週末進行例行設備維修服務。" },
+            { id: 234, word: "sheet", pos: "n.", meaning: "表單", daily: "Fill out the information sheet.", dailyZh: "填寫資訊表單。", fab: "Data sheet contains all electrical specifications of the chip.", fabZh: "規格表包含晶片的所有電性規格。" },
+            { id: 235, word: "shift", pos: "n.", meaning: "班次", daily: "He works the night shift this week.", dailyZh: "他這週上夜班。", fab: "Shift handover meetings ensure smooth production continuity.", fabZh: "交接班會議確保生產連續性順暢。" },
+            { id: 236, word: "show", pos: "v.", meaning: "顯示", daily: "Show me how to solve this math problem.", dailyZh: "教我如何解這道數學題。", fab: "The monitor shows real-time chamber temperature.", fabZh: "監視器顯示即時腔室溫度。" },
+            { id: 237, word: "shuttle", pos: "n.", meaning: "接駁車", daily: "Take the company shuttle bus to the office.", dailyZh: "搭乘公司接駁車到辦公室。", fab: "Internal shuttles transport materials between fab buildings.", fabZh: "廠內接駁車在各廠辦大樓之間運送材料。" },
+            { id: 238, word: "skip", pos: "v.", meaning: "跳過", daily: "Skip the intro and start the video.", dailyZh: "跳過開頭直接開始影片。", fab: "Do not skip any inspection step in the routing.", fabZh: "切勿跳過流程中的任何檢驗步驟。" },
+            { id: 239, word: "sorter", pos: "n.", meaning: "排序機、分類機", daily: "The mail sorter organizes letters quickly.", dailyZh: "信件分類機迅速整理信件。", fab: "The wafer sorter redistributes wafers into clean cassettes.", fabZh: "晶圓排序機將晶圓重新分配到乾淨的晶片盒中。" },
+            { id: 240, word: "source", pos: "n.", meaning: "來源", daily: "Check the source of this news story.", dailyZh: "檢查這則新聞報導的來源。", fab: "Identify the source of particle contamination.", fabZh: "找出微粒污染的來源。" },
+            { id: 241, word: "spec", pos: "n.", meaning: "規格", daily: "Check product spec before purchasing.", dailyZh: "購買前檢查產品規格。", fab: "Thickness must be within engineering spec limits.", fabZh: "厚度必須在工程規格極限之內。" },
+            { id: 242, word: "speed", pos: "n.", meaning: "速度", daily: "Drive at a safe speed.", dailyZh: "以安全的速度駕駛。", fab: "Conveyor speed affects substrate transfer efficiency.", fabZh: "輸送帶速度會影響基板傳送效率。" },
+            { id: 243, word: "split", pos: "n.", meaning: "分帳、分批", daily: "Let's split the restaurant bill.", dailyZh: "我們平分餐廳帳單吧。", fab: "Split the wafer lot into two batches for different experiments.", fabZh: "將晶圓批次分成兩批以進行不同的實驗。" },
+            { id: 244, word: "stage", pos: "n.", meaning: "站別、階段", daily: "The plan is still in an early stage.", dailyZh: "該計畫仍處於早期階段。", fab: "Each manufacturing stage requires strict quality inspection.", fabZh: "每個製造站別都需嚴格的品質檢驗。" },
+            { id: 245, word: "standard", pos: "n.", meaning: "標準", daily: "Quality standards must be met.", dailyZh: "必須符合品質標準。", fab: "Follow international manufacturing standards in the fab.", fabZh: "在廠區中遵循國際製造標準。" },
+            { id: 246, word: "standby", pos: "n.", meaning: "等待", daily: "Keep your phone on standby.", dailyZh: "保持你的手機處於待命狀態。", fab: "Tool is on standby mode waiting for the next lot.", fabZh: "機台處於等待下一批貨的待命模式。" },
+            { id: 247, word: "start", pos: "n.", meaning: "啟動", daily: "Start your day with a healthy breakfast.", dailyZh: "以健康的早餐開啟你的一天。", fab: "Start the production run after final checklist verification.", fabZh: "在最後檢查清單確認後啟動生產運轉。" },
+            { id: 248, word: "station", pos: "n.", meaning: "站", daily: "Wait for the train at platform station.", dailyZh: "在月台站等待火車。", fab: "Wafers move from station to station along the line.", fabZh: "晶圓沿著產線從一個站別移動到另一個站別。" },
+            { id: 249, word: "status", pos: "n.", meaning: "狀況", daily: "Check flight status online.", dailyZh: "線上檢查航班狀況。", fab: "Check equipment status on the central monitoring dashboard.", fabZh: "在中央監控儀表板上檢查設備狀況。" },
+            { id: 250, word: "step", pos: "n.", meaning: "步驟", daily: "Follow each step in the recipe.", dailyZh: "遵循食譜中的每個步驟。", fab: "Photolithography is a key step in chip fabrication.", fabZh: "微影是晶片製造中的關鍵步驟。" },
+            { id: 251, word: "stocker", pos: "n.", meaning: "儲存櫃", daily: "Supermarket stocker refills empty shelves.", dailyZh: "超市補貨員補充空貨架。", fab: "Automated stockers store thousands of wafer pods safely.", fabZh: "自動儲存櫃安全地存放數千個晶圓傳送盒。" },
+            { id: 252, word: "success", pos: "n.", meaning: "成功", daily: "Hard work is the key to success.", dailyZh: "努力是成功的關鍵。", fab: "Process optimization led to high yield success.", fabZh: "製程優化帶來了高良率的成功。" },
+            { id: 253, word: "super", pos: "a.", meaning: "超級的", daily: "Thank you for your super help.", dailyZh: "謝謝你超級大的幫忙。", fab: "Super hot runs get absolute priority in production lines.", fabZh: "超級急件在生產線上享有絕對優先權。" },
+            { id: 254, word: "super hot run", pos: "n.", meaning: "超級急件", daily: "This is a super hot project with tight deadline.", dailyZh: "這是一個期限緊迫的超級急件專案。", fab: "Super hot run wafers are expedited through every fab station.", fabZh: "超級急件晶圓在每個廠區站別都被加急處理。" },
+            { id: 255, word: "supervisor", pos: "n.", meaning: "監督者", daily: "Report any issues to your shift supervisor.", dailyZh: "向你的值班主管報告任何問題。", fab: "The supervisor approved the emergency tool maintenance.", fabZh: "主管批准了緊急機台維護。" },
+            { id: 256, word: "support", pos: "n.", meaning: "支援", daily: "Thank you for your continuous support.", dailyZh: "謝謝你持續的支持。", fab: "Vendor support engineers helped fix the chamber leak.", fabZh: "供應商支援工程師協助修復了腔室漏氣。" },
+            { id: 257, word: "switch", pos: "n.", meaning: "開關", daily: "Turn off the light switch.", dailyZh: "關掉電燈開關。", fab: "Switch the control panel to manual mode.", fabZh: "將控制面板切換至手動模式。" },
+            { id: 258, word: "system", pos: "n.", meaning: "系統", daily: "Computer system update will occur tonight.", dailyZh: "電腦系統更新將於今晚進行。", fab: "MES system tracks every wafer lot across the fab.", fabZh: "製造執行系統追蹤廠區中的每個晶圓批次。" },
+            { id: 259, word: "tag", pos: "n.", meaning: "標籤", daily: "Attach a name tag to your luggage.", dailyZh: "在你的行李上貼上名牌標籤。", fab: "Status tags on equipment indicate maintenance progress.", fabZh: "設備上的狀態標籤表示維護進度。" },
+            { id: 260, word: "take leave", pos: "ph.", meaning: "請假", daily: "He needs to take leave next Monday.", dailyZh: "他下週一需要請假。", fab: "Apply for annual leave in advance through HR system.", fabZh: "透過人資系統提前申請特休假。" },
+            { id: 261, word: "tape", pos: "n.", meaning: "膠帶", daily: "Seal the box with packing tape.", dailyZh: "用包裝膠帶封箱。", fab: "Special tape is used to secure wafer dicing frames.", fabZh: "使用專用膠帶固定晶圓切割框。" },
+            { id: 262, word: "target", pos: "n.", meaning: "目標", daily: "Set a clear target for this quarter.", dailyZh: "為本季設定明確的目標。", fab: "Meet the monthly yield target set by management.", fabZh: "達成管理階層設定的每月良率目標。" },
+            { id: 263, word: "technician", pos: "n.", meaning: "技術員", daily: "An IT technician fixed my laptop.", dailyZh: "IT 技術員修好我的筆電。", fab: "Fab technicians perform daily equipment inspections.", fabZh: "廠區技術員執行每日設備檢查。" },
+            { id: 264, word: "telephone", pos: "n.", meaning: "電話", daily: "Answer the telephone when it rings.", dailyZh: "電話響時接聽電話。", fab: "Call the control room using the internal telephone.", fabZh: "使用內部電話打給控制室。" },
+            { id: 265, word: "temperature", pos: "n.", meaning: "溫度", daily: "Check outdoor temperature before going out.", dailyZh: "外出前檢查戶外溫度。", fab: "Furnace temperature must remain stable during oxidation.", fabZh: "氧化期間爐管溫度必須保持穩定。" },
+            { id: 266, word: "thickness", pos: "n.", meaning: "厚度", daily: "Measure the thickness of the glass.", dailyZh: "量測玻璃的厚度。", fab: "Thin film thickness is measured in nanometers.", fabZh: "薄膜厚度以奈米為單位進行量測。" },
+            { id: 267, word: "thin film", pos: "n.", meaning: "薄膜製程", daily: "Apply a thin film coating to protect the surface.", dailyZh: "塗上一層薄膜塗層以保護表面。", fab: "Thin film deposition adds conductive layers onto wafers.", fabZh: "薄膜沉積將導電層添加到晶圓上。" },
+            { id: 268, word: "time", pos: "n.", meaning: "時間", daily: "Time flies when you are having fun.", dailyZh: "歡樂的時光過得特別快。", fab: "Reduce cycle time to increase manufacturing throughput.", fabZh: "縮短生產週期時間以增加製造產出。" },
+            { id: 269, word: "title", pos: "n.", meaning: "標題", daily: "Write a clear title for your essay.", dailyZh: "為你的文章寫一個清晰的標題。", fab: "Check document title before reading procedures.", fabZh: "在閱讀程序前檢查文件標題。" },
+            { id: 270, word: "top", pos: "n.", meaning: "頂端", daily: "Put the book on the top shelf.", dailyZh: "把書放在最頂層的書架上。", fab: "Inspect the top metal layer for interconnection defects.", fabZh: "檢查頂層金屬層是否有互連缺陷。" },
+            { id: 271, word: "track", pos: "v.", meaning: "追蹤", daily: "Track your package delivery status online.", dailyZh: "線上追蹤你的包裹配送狀態。", fab: "MES systems track every wafer lot movement in real time.", fabZh: "製造執行系統即時追蹤每個晶圓批次的移動。" },
+            { id: 272, word: "training", pos: "n.", meaning: "訓練", daily: "Complete safety training before starting work.", dailyZh: "工作開始前完成安全訓練。", fab: "New operators undergo intensive cleanroom training.", fabZh: "新進操作員接受密集的無塵室訓練。" },
+            { id: 273, word: "trend", pos: "n.", meaning: "趨勢", daily: "Analyze market trend for product design.", dailyZh: "分析產品設計的市場趨勢。", fab: "SPC charts show positive yield trends over the month.", fabZh: "SPC 圖表顯示整個月的正向良率趨勢。" },
+            { id: 274, word: "tune", pos: "v.", meaning: "調整", daily: "Tune your guitar before playing.", dailyZh: "彈奏前調音。", fab: "Tune the etch tool parameters for better uniformity.", fabZh: "調整蝕刻機台參數以獲得更好的均勻性。" },
+            { id: 275, word: "turn rate", pos: "ph.", meaning: "週轉率", daily: "Inventory turn rate measures stock efficiency.", dailyZh: "庫存週轉率衡量庫存效率。", fab: "High inventory turn rate keeps manufacturing agile.", fabZh: "高庫存週轉率保持製造靈活性。" },
+            { id: 276, word: "unload", pos: "v.", meaning: "下貨、卸載", daily: "Help unload groceries from the truck.", dailyZh: "幫忙從卡車上卸載雜貨。", fab: "Unload the wafer cassette from the chamber load-lock.", fabZh: "從腔室負載鎖定區卸載晶圓專用盒。" },
+            { id: 277, word: "use", pos: "v.", meaning: "使用", daily: "Use a pencil to draw sketches.", dailyZh: "使用鉛筆畫草圖。", fab: "Use proper ESD protection tools when handling wafers.", fabZh: "處理晶圓時使用適當的防靜電保護工具。" },
+            { id: 278, word: "username", pos: "n.", meaning: "使用者名稱", daily: "Enter your username to log in.", dailyZh: "輸入你的使用者名稱以登入。", fab: "Log in with your official badge username.", fabZh: "使用你的官方識別證使用者名稱登入。" },
+            { id: 279, word: "vendor", pos: "n.", meaning: "廠商", daily: "Order office supplies from the vendor.", dailyZh: "向廠商訂購辦公用品。", fab: "Vendor engineers provide technical support for equipment.", fabZh: "廠商工程師為設備提供技術支援。" },
+            { id: 280, word: "view", pos: "v.", meaning: "查看", daily: "View scenic photos from the trip.", dailyZh: "查看旅行的風景照片。", fab: "View real-time SPC charts on the engineering terminal.", fabZh: "在工程終端機上查看即時 SPC 圖表。" },
+            { id: 281, word: "wafer", pos: "n.", meaning: "晶圓", daily: "Thin wafers are sliced from silicon ingots.", dailyZh: "薄晶圓從矽晶錠切割而成。", fab: "Silicon wafers serve as the base substrate for microchips.", fabZh: "矽晶圓作為微晶片的基本基板。" },
+            { id: 282, word: "waiting", pos: "n.", meaning: "等待", daily: "Thanks for waiting patiently.", dailyZh: "感謝您的耐心等待。", fab: "Wafers are waiting in the stocker for the next process.", fabZh: "晶圓在儲存櫃中等待下一個製程。" },
+            { id: 283, word: "warning", pos: "n.", meaning: "警告", daily: "Pay attention to weather warnings.", dailyZh: "注意氣象警告。", fab: "System warning alerts operators to check gas pressure.", fabZh: "系統警告提醒操作員檢查氣體壓力。" },
+            { id: 284, word: "weekly", pos: "adv.", meaning: "每週地", daily: "Team meetings are held weekly.", dailyZh: "團隊會議每週舉行一次。", fab: "Weekly maintenance prevents unexpected equipment failures.", fabZh: "每週保養可預防突發的設備故障。" },
+            { id: 285, word: "wet", pos: "a.", meaning: "濕的", daily: "Do not touch the wet paint.", dailyZh: "不要觸摸濕油漆。", fab: "Wet bench stations use chemical solutions for cleaning.", fabZh: "濕洗工作站使用化學溶液進行清洗。" },
+            { id: 286, word: "window", pos: "n.", meaning: "視窗", daily: "Open the window for fresh air.", dailyZh: "打開窗戶呼吸新鮮空氣。", fab: "Process window defines acceptable parameter limits.", fabZh: "製程視窗定義了可接受的參數極限。" },
+            { id: 287, word: "yield", pos: "n.", meaning: "良率", daily: "Agricultural yield depends on weather conditions.", dailyZh: "農業產量取決於氣候條件。", fab: "High manufacturing yield is crucial for profitability.", fabZh: "高製造良率對獲利能力至關重要。" },
+            { id: 288, word: "zero", pos: "n.", meaning: "零", daily: "Temperature dropped to zero degrees.", dailyZh: "溫度降到零度。", fab: "Aim for zero defects in every production batch.", fabZh: "目標在每個生產批次中達到零缺陷。" }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+        let currentContextType = 'daily'; // 'daily' or 'fab'
+        let userProgress = JSON.parse(localStorage.getItem('tsmc_vocab_progress')) || {};
+
+        // Initialize App
+        function initApp() {
+            document.getElementById('stat-total').innerText = vocabData.length;
+            updateStats();
+            loadCard(currentIndex);
+            renderVocabularyList();
+        }
+
+        function loadCard(index) {
+            const item = vocabData[index];
+            isFlipped = false;
+            document.getElementById('card-inner').classList.remove('rotate-y-180');
+
+            // Front
+            document.getElementById('card-pos').innerText = `#${item.id} (${item.pos})`;
+            document.getElementById('card-word').innerText = item.word;
             
-            <!-- FRONT SIDE -->
-            <div class="absolute inset-0 w-full h-full backface-hidden rounded-3xl p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950">
-              <div class="flex justify-between items-start">
-                <div class="flex items-center space-x-2">
-                  <span id="fc-status-badge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                    學習中
-                  </span>
-                  <span id="fc-error-badge" class="px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20 hidden">
-                    錯 0 次
-                  </span>
-                </div>
-                <button onclick="event.stopPropagation(); speakCurrentWord()" class="w-10 h-10 rounded-full bg-slate-800 hover:bg-cyan-600/30 text-cyan-400 border border-slate-700 flex items-center justify-center transition" title="朗讀發音">
-                  <i class="fa-solid fa-volume-high text-lg"></i>
-                </button>
-              </div>
+            const errorCount = userProgress[item.id]?.errors || 0;
+            const badge = document.getElementById('error-badge');
+            if (errorCount > 0) {
+                badge.innerText = `錯題 ${errorCount} 次`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
 
-              <!-- Word Center -->
-              <div class="text-center my-auto">
-                <h2 id="fc-word" class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-2">
-                  wafer
-                </h2>
-                <p id="fc-pos" class="text-slate-400 text-sm font-mono italic">
-                  (n.) 晶圓
-                </p>
-              </div>
+            // Back
+            document.getElementById('card-pos-back').innerText = `#${item.id} (${item.pos})`;
+            document.getElementById('card-word-back').innerText = item.word;
+            document.getElementById('card-meaning').innerText = item.meaning;
 
-              <div class="text-center border-t border-slate-800 pt-3">
-                <span class="text-xs text-slate-500 hover:text-slate-400">點擊卡片以翻面檢視中文與例句 <i class="fa-solid fa-rotate text-xs ml-1"></i></span>
-              </div>
-            </div>
-
-            <!-- BACK SIDE -->
-            <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-3xl p-6 sm:p-8 flex flex-col justify-between bg-slate-900 border border-cyan-500/30">
-              <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center space-x-2">
-                  <h3 id="fc-back-word" class="text-xl font-bold text-cyan-400">wafer</h3>
-                  <span id="fc-back-pos" class="text-xs text-slate-400">n.</span>
-                  <span id="fc-meaning" class="text-lg font-semibold text-white">晶圓</span>
-                </div>
-                <button onclick="event.stopPropagation(); speakCurrentWord()" class="text-slate-400 hover:text-cyan-400 text-sm px-2 py-1">
-                  <i class="fa-solid fa-volume-high"></i>
-                </button>
-              </div>
-
-              <!-- Context Examples Switcher -->
-              <div class="my-auto space-y-3" onclick="event.stopPropagation()">
-                <!-- Toggle Tab for Context -->
-                <div class="flex rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs w-fit">
-                  <button id="fc-tab-fab" onclick="toggleCardContext('fab')" class="px-3 py-1 rounded font-medium bg-cyan-600 text-white">
-                    <i class="fa-solid fa-microchip mr-1"></i>半導體情境
-                  </button>
-                  <button id="fc-tab-daily" onclick="toggleCardContext('daily')" class="px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-house mr-1"></i>生活情境
-                  </button>
-                </div>
-
-                <!-- Example Sentence Boxes -->
-                <div id="fc-sentence-fab" class="bg-slate-950/70 p-3 sm:p-4 rounded-xl border border-slate-800/80 space-y-1.5">
-                  <p id="fc-en-fab" class="text-slate-200 text-sm font-medium leading-relaxed">
-                    "Please transfer the silicon wafer to the clean room immediately."
-                  </p>
-                  <p id="fc-zh-fab" class="text-cyan-300 text-xs">
-                    請立即將矽晶圓轉移至無塵室。
-                  </p>
-                </div>
-
-                <div id="fc-sentence-daily" class="bg-slate-950/70 p-3 sm:p-4 rounded-xl border border-slate-800/80 space-y-1.5 hidden">
-                  <p id="fc-en-daily" class="text-slate-200 text-sm font-medium leading-relaxed">
-                    "He ordered a crispy waffle wafer at the coffee shop."
-                  </p>
-                  <p id="fc-zh-daily" class="text-cyan-300 text-xs">
-                    他在咖啡廳點了一份酥脆的餅乾。
-                  </p>
-                </div>
-              </div>
-
-              <div class="text-center pt-2">
-                <span class="text-xs text-slate-500">再次點擊卡片可翻回正面</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Flashcard Action Control Buttons -->
-        <div class="mt-6 flex items-center justify-between gap-4">
-          <button onclick="prevCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium text-sm transition flex items-center space-x-2 border border-slate-700">
-            <i class="fa-solid fa-arrow-left"></i>
-            <span class="hidden sm:inline">上一張</span>
-          </button>
-
-          <div class="flex space-x-3">
-            <button onclick="markCardMastery(false)" class="px-5 py-2.5 bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-800/60 rounded-xl font-medium text-sm transition flex items-center space-x-2">
-              <i class="fa-solid fa-xmark text-rose-400"></i>
-              <span>不太熟 (需要複習)</span>
-            </button>
-            <button onclick="markCardMastery(true)" class="px-5 py-2.5 bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-800/60 rounded-xl font-medium text-sm transition flex items-center space-x-2">
-              <i class="fa-solid fa-check text-emerald-400"></i>
-              <span>已精通</span>
-            </button>
-          </div>
-
-          <button onclick="nextCard()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium text-sm transition flex items-center space-x-2 border border-slate-700">
-            <span class="hidden sm:inline">下一張</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
-        </div>
-
-        <!-- Progress Counter -->
-        <div class="text-center mt-4">
-          <span id="fc-counter" class="text-xs font-mono text-slate-400">1 / 288</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. QUIZ / SPACED REPETITION TAB -->
-    <div id="tab-quiz-content" class="space-y-6 hidden">
-      <div class="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
-          <div class="flex items-center space-x-2">
-            <span class="px-3 py-1 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800/50 font-mono text-xs font-semibold">
-              <i class="fa-solid fa-bolt mr-1"></i>智慧間隔重複測驗
-            </span>
-            <span class="text-xs text-slate-400 hidden sm:inline">高錯題率單字出現頻率自動提高</span>
-          </div>
-          <div class="text-xs font-mono text-slate-400">
-            連續答對: <span id="quiz-streak" class="text-emerald-400 font-bold">0</span>
-          </div>
-        </div>
-
-        <!-- Question View -->
-        <div id="quiz-question-area" class="space-y-6">
-          <!-- Word to Quiz -->
-          <div class="text-center py-4 bg-slate-950/80 rounded-2xl border border-slate-800/80 relative">
-            <button onclick="speakQuizWord()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 hover:bg-cyan-600/30 text-cyan-400 border border-slate-700 flex items-center justify-center transition" title="朗讀發音">
-              <i class="fa-solid fa-volume-high text-xs"></i>
-            </button>
-            <div class="text-xs font-semibold text-cyan-400 mb-1 uppercase tracking-wider">請選擇正確的中義與詞性</div>
-            <h3 id="quiz-target-word" class="text-3xl sm:text-4xl font-extrabold text-white tracking-wide">
-              yield
-            </h3>
-            <div id="quiz-word-weight-tag" class="mt-2 text-xs text-rose-400 font-mono">
-              <!-- Error level indicator -->
-            </div>
-          </div>
-
-          <!-- Multiple Choice Buttons -->
-          <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- Dynamically populated options -->
-          </div>
-
-          <!-- Sentence Hint toggle -->
-          <div class="bg-slate-950/50 p-4 rounded-xl border border-slate-800/60">
-            <div class="flex items-center justify-between text-xs mb-2">
-              <span class="text-slate-400 font-medium"><i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i>例句提示</span>
-              <div class="flex space-x-2">
-                <button onclick="switchQuizSentenceContext('fab')" id="btn-quiz-ctx-fab" class="text-cyan-400 font-bold underline">晶圓製造</button>
-                <span class="text-slate-600">|</span>
-                <button onclick="switchQuizSentenceContext('daily')" id="btn-quiz-ctx-daily" class="text-slate-400 hover:text-slate-200">日常生活</button>
-              </div>
-            </div>
-            <p id="quiz-sentence-hint" class="text-xs sm:text-sm text-slate-300 italic">
-              "Improving process control can significantly boost wafer _____."
-            </p>
-          </div>
-
-          <!-- Feedback Box -->
-          <div id="quiz-feedback" class="p-4 rounded-xl hidden text-sm font-medium border">
-            <!-- Correct / Incorrect feedback message -->
-          </div>
-
-          <!-- Next Question Button -->
-          <button id="btn-next-quiz" onclick="loadNextQuizQuestion()" class="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-xl transition shadow-lg shadow-cyan-900/20 hidden flex items-center justify-center space-x-2">
-            <span>下一題</span>
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. VOCABULARY LIST & SEARCH TAB -->
-    <div id="tab-list-content" class="space-y-6 hidden">
-      <!-- Search & Controls -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
-        <div class="relative w-full sm:w-96">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
-          <input type="text" id="list-search-input" onkeyup="renderVocabularyList()" placeholder="搜尋英文單字或中文解釋..." class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2 focus:outline-none focus:border-cyan-500 placeholder-slate-500">
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-end">
-          <select id="list-filter-status" onchange="renderVocabularyList()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-500">
-            <option value="all">所有單字狀態</option>
-            <option value="mastered">已精通</option>
-            <option value="learning">學習中</option>
-            <option value="error">高錯誤率 (錯題 ≥ 1)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Vocabulary Table -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm text-slate-300">
-            <thead class="bg-slate-950 text-slate-400 uppercase font-semibold text-[11px] tracking-wider border-b border-slate-800">
-              <tr>
-                <th class="py-3.5 px-4">單字 / 詞性</th>
-                <th class="py-3.5 px-4">中文解釋</th>
-                <th class="py-3.5 px-4 hidden md:table-cell">晶圓製造/半導體例句</th>
-                <th class="py-3.5 px-4 hidden lg:table-cell">日常生活例句</th>
-                <th class="py-3.5 px-4 text-center">錯題數</th>
-                <th class="py-3.5 px-4 text-center">狀態</th>
-                <th class="py-3.5 px-4 text-center">操作</th>
-              </tr>
-            </thead>
-            <tbody id="vocab-table-body" class="divide-y divide-slate-800/60">
-              <!-- Dynamically Populated Table Rows -->
-            </tbody>
-          </table>
-        </div>
-        <div id="table-empty-state" class="text-center py-12 text-slate-500 hidden">
-          <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
-          <p>沒有找到符合條件的單字</p>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-      <p>TSMC 專屬半導體雙語單字學習軟體 &copy; 2026</p>
-      <p class="text-slate-600">內建 288 個高頻專業單字與智慧間隔重複演算法</p>
-    </div>
-  </footer>
-
-  <!-- JAVASCRIPT LOGIC -->
-  <script>
-    // --- 1. FULL VOCABULARY DATABASE (288 WORDS EXTRACTED FROM TSMC PDF) ---
-    // Includes POS, Traditional Chinese Definition, Daily Example, and Fab Example
-    const rawVocabularyList = [
-      { id: 1, word: "ability", pos: "n.", zh: "能力", daily: "She has the ability to speak three languages fluently.", fab: "The machine has the ability to process 120 wafers per hour." },
-      { id: 2, word: "abnormal", pos: "a.", zh: "異常的", daily: "The high temperature in winter is abnormal.", fab: "An abnormal defect rate was detected on line 3." },
-      { id: 3, word: "abort", pos: "v.", zh: "中止", daily: "They had to abort the mission due to bad weather.", fab: "Press the emergency button to abort the current wafer run." },
-      { id: 4, word: "absence", pos: "n.", zh: "缺席", daily: "His absence was noticed during the morning class.", fab: "Unexcused absence during shift handover is strictly prohibited." },
-      { id: 5, word: "acid", pos: "n.", zh: "酸", daily: "Lemon juice contains citric acid.", fab: "Chemical gloves are required when handling hydrofluoric acid." },
-      { id: 6, word: "active", pos: "a.", zh: "主動的", daily: "He takes an active role in community service.", fab: "Ensure the active sensor is calibrated before starting etch." },
-      { id: 7, word: "actual", pos: "a.", zh: "真實的", daily: "The actual cost was lower than estimated.", fab: "Compare the actual yield with the target yield daily." },
-      { id: 8, word: "add", pos: "v.", zh: "增加", daily: "Please add sugar to my coffee.", fab: "Add liquid chemical to the chamber tank carefully." },
-      { id: 9, word: "adjust", pos: "v.", zh: "調整", daily: "Adjust your seat belt before driving.", fab: "Technicians need to adjust the pressure parameter of the tool." },
-      { id: 10, word: "AI", pos: "n.", zh: "人工智慧", daily: "AI can generate images from simple text prompts.", fab: "AI is used to predict equipment failure and optimize wafer yield." },
-      { id: 11, word: "air shower", pos: "n.", zh: "潔淨通道", daily: "The clean facility has an air shower at the entry.", fab: "All engineers must go through the air shower before entering the cleanroom." },
-      { id: 12, word: "alarm", pos: "n.", zh: "警報", daily: "My alarm clock rings at 6 AM every day.", fab: "The tool triggered a high-temperature alarm during processing." },
-      { id: 13, word: "alert", pos: "n.", zh: "警報", daily: "The weather bureau issued a storm alert.", fab: "Check the system log immediately when a amber alert flashes." },
-      { id: 14, word: "align", pos: "v.", zh: "對焦", daily: "Align the text to the left margin.", fab: "The lithography stepper must align the mask with the wafer sub-layer." },
-      { id: 15, word: "annually", pos: "a.", zh: "每年的", daily: "The company holds an annual dinner in December.", fab: "Tool calibration is audited annually by the quality team." },
-      { id: 16, word: "area", pos: "n.", zh: "區域", daily: "There is a playground in this residential area.", fab: "Smoking is strictly banned in the yellow light area." },
-      { id: 17, word: "attach", pos: "v.", zh: "附上", daily: "Please attach your resume to the email.", fab: "Attach the warning label to the hazardous chemical container." },
-      { id: 18, word: "audit", pos: "v.", zh: "稽核、查核", daily: "Accountants audit the company's financial records.", fab: "The ISO team will audit our fab safety compliance tomorrow." },
-      { id: 19, word: "automatic", pos: "a.", zh: "自動的", daily: "The glass door has an automatic sensor.", fab: "The automated material handling system (AMHS) moves pods automatically." },
-      { id: 20, word: "automotive", pos: "adj.", zh: "汽車的", daily: "He works in the automotive industry as a designer.", fab: "Automotive chips require extra high reliability standards." },
-      { id: 21, word: "available", pos: "a.", zh: "可使用的", daily: "Are there any seats available on this flight?", fab: "Check if tool ET-01 is available for running the test wafer." },
-      { id: 22, word: "average", pos: "n.", zh: "平均", daily: "His average test score was 85.", fab: "The average cycle time decreased by 10% this month." },
-      { id: 23, word: "backup", pos: "n.", zh: "支援", daily: "Always make a backup copy of your important files.", fab: "We need a backup power supply for critical cleanroom systems." },
-      { id: 24, word: "bank", pos: "n.", zh: "銀行 (v.) 暫存", daily: "She deposited money into her bank account.", fab: "Wafers are temporarily stored in the stocker bank before lithography." },
-      { id: 25, word: "basic", pos: "a.", zh: "基礎的", daily: "Water and food are basic human needs.", fab: "All new operators must complete basic safety training." },
-      { id: 26, word: "beam", pos: "n.", zh: "光束", daily: "A beam of light shone through the window.", fab: "E-beam inspection measures ultrafine circuit patterns." },
-      { id: 27, word: "benchmark", pos: "n.", zh: "標竿學習", daily: "This product sets a new benchmark for quality.", fab: "We benchmark our fab throughput against top global standards." },
-      { id: 28, word: "bottle", pos: "n.", zh: "瓶子", daily: "Bring a water bottle when you go hiking.", fab: "Replace the empty photoresist bottle on the track tool." },
-      { id: 29, word: "bottom", pos: "n.", zh: "底部", daily: "The details are written at the bottom of the page.", fab: "Check the particle count at the bottom of the cassette." },
-      { id: 30, word: "broken", pos: "a.", zh: "破掉的", daily: "He fixed the broken wooden chair.", fab: "A broken wafer inside the chamber caused a line shutdown." },
-      { id: 31, word: "cancel", pos: "v.", zh: "取消", daily: "They cancelled the outdoor concert due to rain.", fab: "Cancel the lot execution if the recipe parameters are wrong." },
-      { id: 32, word: "card", pos: "n.", zh: "卡片", daily: "Don't forget to swipe your ID card at the entrance.", fab: "Update the job status on the physical run-card." },
-      { id: 33, word: "cart", pos: "n.", zh: "手推車", daily: "Put your groceries in the shopping cart.", fab: "Transport the FOUP carefully using the special cushioned cart." },
-      { id: 34, word: "cassette", pos: "n.", zh: "晶片專用盒", daily: "An old audio cassette tape was found in the drawer.", fab: "Load the 25 wafers into the Teflon cassette." },
-      { id: 35, word: "center", pos: "n.", zh: "中心", daily: "The park is located in the center of the city.", fab: "Align the wafer exactly at the center of the chuck." },
-      { id: 36, word: "certify", pos: "v.", zh: "證實、認證", daily: "The doctor certified that he was fit to work.", fab: "Engineers must certify the tool before releasing it to production." },
-      { id: 37, word: "change", pos: "v.", zh: "更換", daily: "Change your wet clothes before you catch a cold.", fab: "Change the chemical filter every 500 process hours." },
-      { id: 38, word: "chart", pos: "n.", zh: "圖表", daily: "The teacher showed a chart of sales growth.", fab: "Monitor the SPC chart to track process variation." },
-      { id: 39, word: "check", pos: "v.", zh: "檢查", daily: "Check your passport before heading to the airport.", fab: "Check the gas pressure gauge before starting the run." },
-      { id: 40, word: "chemical", pos: "n.", zh: "化學、化學品", daily: "Avoid mixing household chemicals together.", fab: "Wear full protective gear when dispensing dangerous chemicals." },
-      { id: 41, word: "chip", pos: "n.", zh: "晶片", daily: "This smartphone uses a high-performance microchip.", fab: "Defects on the wafer reduce the total yield of usable chips." },
-      { id: 42, word: "choose", pos: "v.", zh: "挑選", daily: "Choose the option that fits your needs best.", fab: "Choose the correct recipe according to the product type." },
-      { id: 43, word: "clean", pos: "v.", zh: "清潔", daily: "Clean your room before guest arrive.", fab: "Clean the quartz tube to prevent contamination." },
-      { id: 44, word: "clean chamber", pos: "n.", zh: "潔淨室", daily: "A dust-free environment is needed for delicate gear.", fab: "Regular maintenance ensures the clean chamber stays particle-free." },
-      { id: 45, word: "clear", pos: "v.", zh: "清除", daily: "Clear the table after finishing dinner.", fab: "Clear the error log on the display screen after fixing the issue." },
-      { id: 46, word: "collect", pos: "v.", zh: "蒐集", daily: "He likes to collect rare postage stamps.", fab: "Collect yield data from all testing stations daily." },
-      { id: 47, word: "color", pos: "n.", zh: "顏色", daily: "Her favorite color is blue.", fab: "A change in color on the indicator tape signals gas leakage." },
-      { id: 48, word: "comment", pos: "n.", zh: "評論", daily: "He left a positive comment on the video.", fab: "Add a comment in the system log explaining why the lot was held." },
-      { id: 49, word: "company", pos: "n.", zh: "公司", daily: "She works for an international tech company.", fab: "Company policy requires strict adherence to IP protection." },
-      { id: 50, word: "complete", pos: "v.", zh: "完成", daily: "Complete your homework before watching TV.", fab: "Complete the PM checklist before turning on the power." },
-      { id: 51, word: "computer", pos: "n.", zh: "電腦", daily: "Turn off your computer when leaving the office.", fab: "The tool computer controls stage positioning accurately." },
-      { id: 52, word: "concern", pos: "v.", zh: "擔憂", daily: "Safety issues concern every parent.", fab: "Particle contamination is our primary concern right now." },
-      { id: 53, word: "confidential", pos: "a.", zh: "機密的", daily: "Personal records must be kept confidential.", fab: "All chip design files are strictly confidential." },
-      { id: 54, word: "confirm", pos: "v.", zh: "確認", daily: "Please confirm your flight reservation online.", fab: "Confirm that all interlocks are active before gas injection." },
-      { id: 55, word: "contamination", pos: "n.", zh: "污染", daily: "Bacterial contamination ruined the food supply.", fab: "Airborne molecular contamination can ruin EUV mirrors." },
-      { id: 56, word: "continue", pos: "v.", zh: "繼續", daily: "We will continue our meeting after lunch.", fab: "If no alarms ring, continue processing the next wafer." },
-      { id: 57, word: "control", pos: "n.", zh: "控制", daily: "Keep control of your bicycle on steep hills.", fab: "Statistical process control prevents batch defects." },
-      { id: 58, word: "copy", pos: "n.", zh: "拷貝", daily: "Make a copy of the contract for your files.", fab: "Copy the updated recipe to all connected etching tools." },
-      { id: 59, word: "count", pos: "v.", zh: "計算", daily: "Count the coins in your jar.", fab: "Count the total defect density on the wafer edge." },
-      { id: 60, word: "customer", pos: "n.", zh: "客戶", daily: "The customer asked for a full refund.", fab: "We must ship the qualified wafer lots to the customer on schedule." },
-      { id: 61, word: "cycle", pos: "n.", zh: "週期", daily: "The water cycle includes evaporation and rain.", fab: "The thermal annealing cycle takes about two hours." },
-      { id: 62, word: "cycle time", pos: "n.", zh: "生產週期", daily: "Reducing overall order cycle time satisfies buyers.", fab: "Shortening lot cycle time increases fab operational agility." },
-      { id: 63, word: "daily", pos: "a.", zh: "每日的", daily: "Drinking water is part of my daily routine.", fab: "Daily inspection logs are submitted every shift end." },
-      { id: 64, word: "data", pos: "n.", zh: "資料", daily: "Analyze the survey data to find trends.", fab: "Upload defect inspection data to the central server." },
-      { id: 65, word: "date", pos: "n.", zh: "日期", daily: "What is today's date?", fab: "Check the expiration date on the photoresist chemical bottle." },
-      { id: 66, word: "decline", pos: "v.", zh: "減少", daily: "Car sales declined sharply this quarter.", fab: "Yield decline indicates a potential tool hardware issue." },
-      { id: 67, word: "defect", pos: "n.", zh: "缺陷", daily: "Inspect the shirt for any stitching defect.", fab: "Micro-scratches on the wafer surface are classified as a critical defect." },
-      { id: 68, word: "delay", pos: "v.", zh: "延遲", daily: "The train was delayed by heavy snow.", fab: "Equipment breakdown will delay production targets." },
-      { id: 69, word: "delete", pos: "v.", zh: "刪除", daily: "Delete unwanted photos from your phone.", fab: "Do not delete historical maintenance logs without authorization." },
-      { id: 70, word: "diffusion", pos: "n.", zh: "擴散製程", daily: "The diffusion of tea color in hot water is fast.", fab: "High-temperature furnaces are used in the diffusion process." },
-      { id: 71, word: "document", pos: "n.", zh: "文件", daily: "Sign the official document at the bank.", fab: "Follow the procedure as specified in the official SOP document." },
-      { id: 72, word: "dry", pos: "a.", zh: "乾的", daily: "Hang your wet towel to dry.", fab: "Dry etching uses plasma gas instead of liquid acids." },
-      { id: 73, word: "emergency", pos: "n.", zh: "緊急情況", daily: "Dial 911 in case of an emergency.", fab: "In an emergency, follow the evacuation route immediately." },
-      { id: 74, word: "emergency stop", pos: "n.", zh: "緊急停止", daily: "Pull the emergency stop lever on the train if needed.", fab: "Hit the EMO (emergency stop) button if chemical leaks." },
-      { id: 75, word: "engineer", pos: "n.", zh: "工程師", daily: "She is a civil engineer who builds bridges.", fab: "The process engineer is tuning the etch selectivity recipe." },
-      { id: 76, word: "enhance", pos: "v.", zh: "增進", daily: "Good lighting enhances the photo quality.", fab: "Enhance cleaning steps to eliminate sub-micron particles." },
-      { id: 77, word: "enter", pos: "v.", zh: "進入", daily: "Knock on the door before you enter.", fab: "Enter your employee ID to log into the MES station." },
-      { id: 78, word: "environment", pos: "n.", zh: "環境", daily: "Recycling protects our natural environment.", fab: "Cleanrooms maintain a temperature and humidity controlled environment." },
-      { id: 79, word: "equipment", pos: "n.", zh: "設備", daily: "Camping equipment can be rented here.", fab: "Equipment maintenance is scheduled for every Tuesday night." },
-      { id: 80, word: "error", pos: "n.", zh: "錯誤", daily: "There is a spelling error in your essay.", fab: "The tool displayed error code 404: robot arm failure." },
-      { id: 81, word: "etching", pos: "n.", zh: "蝕刻製程", daily: "Etching patterns on glass requires special chemical tools.", fab: "Plasma etching removes unwanted silicon oxide layers precisely." },
-      { id: 82, word: "EUV", pos: "n.", zh: "極紫外光", daily: "Ultraviolet light from the sun causes sunburn.", fab: "EUV lithography allows sub-3nm chip patterning." },
-      { id: 83, word: "event", pos: "n.", zh: "事件", daily: "The sports event will take place tomorrow.", fab: "Log any power fluctuation as a safety event." },
-      { id: 84, word: "execute", pos: "v.", zh: "執行", daily: "Execute the plan step by step.", fab: "Execute the automatic calibration script before running production." },
-      { id: 85, word: "exit", pos: "n.", zh: "退出", daily: "Look for the emergency exit sign.", fab: "Exit the cleanroom immediately if the gas alarm sounds." },
-      { id: 86, word: "fault", pos: "n.", zh: "錯誤", daily: "It was not my fault that the vase broke.", fab: "A electrical ground fault caused the tool generator to trip." },
-      { id: 87, word: "find", pos: "v.", zh: "發現", daily: "I can't find my keys anywhere.", fab: "Defect inspection tools help us find micro cracks." },
-      { id: 88, word: "floor", pos: "n.", zh: "地板", daily: "Sweep the kitchen floor every evening.", fab: "Antistatic flooring prevents ESD damage in the fab." },
-      { id: 89, word: "focus", pos: "n.", zh: "焦點", daily: "Stay focused on your studies.", fab: "Adjust the lens focus to ensure sharp pattern projection." },
-      { id: 90, word: "follow", pos: "v.", zh: "照做、跟隨", daily: "Follow the map to find the museum.", fab: "Operators must strictly follow standard operating procedures." },
-      { id: 91, word: "freeze", pos: "v.", zh: "凍結", daily: "Water will freeze at 0 degrees Celsius.", fab: "Freeze lot processing if yield drops below 95%." },
-      { id: 92, word: "full", pos: "a.", zh: "滿的", daily: "The restaurant is full of hungry customers.", fab: "The stocker is full; redirect new pods to fab B." },
-      { id: 93, word: "function", pos: "n.", zh: "功能", daily: "This smartphone has a photo editing function.", fab: "Verify that the safety sensor function works properly." },
-      { id: 94, word: "gas", pos: "n.", zh: "氣體", daily: "Natural gas is used for home heating.", fab: "Toxic gas detectors are placed under every process tool." },
-      { id: 95, word: "glass", pos: "n.", zh: "玻璃、鏡片", daily: "Be careful not to step on broken glass.", fab: "Quartz glass tubes are used inside high-temp furnaces." },
-      { id: 96, word: "gloves", pos: "n.", zh: "手套", daily: "Wear warm gloves in the winter.", fab: "Nitrile gloves must be worn at all times inside the fab." },
-      { id: 97, word: "grade", pos: "n.", zh: "等級", daily: "She achieved high grades in math.", fab: "Only electronic-grade chemicals may be used in processing." },
-      { id: 98, word: "green", pos: "n.", zh: "綠色", daily: "Green plants need sunlight to grow.", fab: "A green light indicates the tool is in idle/ready state." },
-      { id: 99, word: "group", pos: "n.", zh: "群組", daily: "Form a group of four for the project.", fab: "The process integration group oversees line optimization." },
-      { id: 100, word: "handle", pos: "v.", zh: "處理", daily: "She knows how to handle stress well.", fab: "Handle fragile wafers with vacuum wands only." },
-      { id: 101, word: "hard-disk", pos: "n.", zh: "硬盤", daily: "Save your backup files onto an external hard-disk.", fab: "Replace the tool computer's failed hard-disk." },
-      { id: 102, word: "heavy", pos: "a.", zh: "重的", daily: "This heavy suitcase is hard to lift.", fab: "Use heavy lifting equipment when replacing the chamber lid." },
-      { id: 103, word: "helmet", pos: "n.", zh: "安全帽", daily: "Always wear a helmet when riding a scooter.", fab: "Wear a safety helmet during tool installation in the sub-fab." },
-      { id: 104, word: "help", pos: "v.", zh: "幫助", daily: "Can you help me move this box?", fab: "Cross-functional teams help solve yields problems faster." },
-      { id: 105, word: "hold", pos: "v.", zh: "暫停", daily: "Please hold the line while I transfer your call.", fab: "Put the lot on hold pending further defect analysis." },
-      { id: 106, word: "hole", pos: "n.", zh: "孔、洞", daily: "There is a hole in my pocket.", fab: "Etching creates deep contact holes in the dielectric layer." },
-      { id: 107, word: "hot", pos: "a.", zh: "熱的", daily: "Be careful, the soup is very hot.", fab: "Do not touch furnace walls while hot." },
-      { id: 108, word: "impact", pos: "n.", zh: "影響", daily: "Technology has a big impact on daily life.", fab: "Power glitch had a major impact on line output." },
-      { id: 109, word: "improve", pos: "v.", zh: "改善", daily: "Practice daily to improve your English.", fab: "New chemical polish recipe improved wafer planarity." },
-      { id: 110, word: "inform", pos: "v.", zh: "通知", daily: "Please inform us of your change of address.", fab: "Inform the supervisor immediately if chemical spills." },
-      { id: 111, word: "information", pos: "n.", zh: "資訊", daily: "You can find more information on our website.", fab: "Check MES for accurate lot tracking information." },
-      { id: 112, word: "inhibition", pos: "n.", zh: "禁止禁用", daily: "Lack of confidence causes social inhibition.", fab: "Chemical inhibition prevents unintended oxidation on copper lines." },
-      { id: 113, word: "input", pos: "n.", zh: "輸入", daily: "We value your input on this project design.", fab: "Verify gas flow rate input values before turning on valves." },
-      { id: 114, word: "inspect", pos: "v.", zh: "檢查", daily: "Customs officers inspect luggage at the border.", fab: "Inspect 5 wafers per lot for particle contamination." },
-      { id: 115, word: "inspection", pos: "n.", zh: "檢驗", daily: "The house passed the safety inspection.", fab: "Automated optical inspection catches sub-micron pattern flaws." },
-      { id: 116, word: "instruction", pos: "n.", zh: "指令", daily: "Read the assembly instructions carefully.", fab: "Follow tool calibration instructions printed in the SOP." },
-      { id: 117, word: "internet", pos: "n.", zh: "網際網路", daily: "I connect to the internet to work remotely.", fab: "Fab tool network is isolated from public internet for security." },
-      { id: 118, word: "interview", pos: "n.", zh: "面試", daily: "He prepared well for his job interview.", fab: "Candidates for process engineer attend technical interviews." },
-      { id: 119, word: "issue", pos: "v.", zh: "發行(n.) 議題", daily: "They issued a warning about high winds.", fab: "Investigate the root cause of the particle spike issue." },
-      { id: 120, word: "job", pos: "n.", zh: "工作", daily: "He is looking for a full-time job.", fab: "The robot arm finished its wafer transfer job." },
-      { id: 121, word: "keep", pos: "v.", zh: "保持", daily: "Keep your room neat and tidy.", fab: "Keep cleanroom humidity under 45% strictly." },
-      { id: 122, word: "keyboard", pos: "n.", zh: "鍵盤", daily: "Clean your computer keyboard regularly.", fab: "Use the industrial sealed keyboard near the wet bench." },
-      { id: 123, word: "label", pos: "n.", zh: "標籤", daily: "Check the washing label on the clothes.", fab: "Attach a barcode label to every cassette." },
-      { id: 124, word: "laboratory", pos: "n.", zh: "實驗室", daily: "Scientists conduct experiments in the laboratory.", fab: "Send failure samples to the analytical laboratory." },
-      { id: 125, word: "leader", pos: "n.", zh: "組長", daily: "She is a natural leader in group projects.", fab: "Report machine abnormalities to your shift leader." },
-      { id: 126, word: "learn", pos: "v.", zh: "學習", daily: "Children learn languages quickly.", fab: "Operators learn cleanroom protocols during orientation." },
-      { id: 127, word: "level", pos: "n.", zh: "程度", daily: "Choose the beginner level class.", fab: "Monitor chemical tank liquid level every hour." },
-      { id: 128, word: "lift", pos: "v.", zh: "抬起、舉起", daily: "Lift heavy boxes with your legs, not your back.", fab: "The robot blade will lift the wafer off the chuck." },
-      { id: 129, word: "light", pos: "n.", zh: "光", daily: "Turn off the light when leaving.", fab: "Yellow light photo area prevents unwanted resist exposure." },
-      { id: 130, word: "line", pos: "n.", zh: "直線", daily: "Draw a straight line on the paper.", fab: "Production line 2 is dedicated to advanced packaging." },
-      { id: 131, word: "link", pos: "n.", zh: "連結", daily: "Click the link to visit the website.", fab: "Establish network link between MES and tool server." },
-      { id: 132, word: "liquid", pos: "n.", zh: "液體", daily: "Water is a clear liquid.", fab: "Chemical delivery system pumps liquid source safely." },
-      { id: 133, word: "list", pos: "n.", zh: "清單", daily: "Write a shopping list before going out.", fab: "Check the tool PM task list before sign-off." },
-      { id: 134, word: "lithography", pos: "n.", zh: "黃光/微影製程", daily: "Lithography is an artistic printing process.", fab: "Photolithography transfers circuit patterns onto silicon." },
-      { id: 135, word: "load", pos: "v.", zh: "上貨、裝載", daily: "Load the luggage into the trunk.", fab: "Load the FOUP onto the tool loadport." },
-      { id: 136, word: "loading", pos: "n.", zh: "負荷", daily: "High server loading slows down internet speed.", fab: "Furnace tube loading capacity is 150 wafers." },
-      { id: 137, word: "lobby", pos: "n.", zh: "大廳", daily: "Meet me in the hotel lobby at 8 AM.", fab: "Visitors wait in the fab main lobby for security escorts." },
-      { id: 138, word: "location", pos: "n.", zh: "位置", daily: "This restaurant is in a great location.", fab: "Record exact location of defective die on wafer map." },
-      { id: 139, word: "lock", pos: "v.", zh: "鎖住", daily: "Lock the front door before going to sleep.", fab: "Lock the safety interlock door during plasma processing." },
-      { id: 140, word: "log sheet", pos: "n.", zh: "工作紀錄", daily: "Keep a daily log sheet of your workouts.", fab: "Fill out equipment maintenance log sheet after servicing." },
-      { id: 141, word: "lose", pos: "v.", zh: "遺失", daily: "Don't lose your keys.", fab: "A power drop causes tool to lose calibration data." },
-      { id: 142, word: "lot", pos: "n.", zh: "批貨", daily: "There is a parking lot behind the building.", fab: "A standard wafer lot contains 25 wafers." },
-      { id: 143, word: "machine", pos: "n.", zh: "機器", daily: "The washing machine is running.", fab: "Machine breakdown caused production delay on line 1." },
-      { id: 144, word: "maintain", pos: "v.", zh: "維護", daily: "Maintain a healthy diet and exercise regularly.", fab: "Maintain vacuum pressure inside chamber at exact level." },
-      { id: 145, word: "manual", pos: "a.", zh: "手動的", daily: "Read the car manual for instructions.", fab: "Switch to manual mode to override auto loading." },
-      { id: 146, word: "manufacture", pos: "v.", zh: "製造", daily: "This factory manufactures sports shoes.", fab: "TSMC manufactures advanced microchips for global clients." },
-      { id: 147, word: "mark", pos: "n.", zh: "記號", daily: "There is a stain mark on your shirt.", fab: "Align mask according to wafer alignment mark." },
-      { id: 148, word: "mask", pos: "n.", zh: "光罩、口罩", daily: "Wear a face mask when riding in dusty area.", fab: "Photomask contains circuit layout patterns for lithography." },
-      { id: 149, word: "material", pos: "n.", zh: "原料", daily: "Cotton is a natural material.", fab: "High-purity target material is required for sputtering." },
-      { id: 150, word: "measure", pos: "v.", zh: "量測", daily: "Measure the room size with a tape.", fab: "Metrology tools measure oxide film thickness." },
-      { id: 151, word: "mechanical", pos: "a.", zh: "機械的", daily: "Mechanical watches don't need batteries.", fab: "Check mechanical arm movement for smooth rotation." },
-      { id: 152, word: "merge", pos: "v.", zh: "合併", daily: "The two companies merged last year.", fab: "Merge split wafer lots after special test completes." },
-      { id: 153, word: "message", pos: "n.", zh: "訊息", daily: "Send me a text message when you arrive.", fab: "System displays alarm message: vacuum pressure low." },
-      { id: 154, word: "metal", pos: "n.", zh: "金屬", daily: "Gold and copper are shiny metals.", fab: "Copper deposition creates metal interconnect layers." },
-      { id: 155, word: "miss-operation", pos: "n.", zh: "錯誤動作", daily: "A slight miss-operation caused the dish to break.", fab: "Human miss-operation led to wrong recipe selection." },
-      { id: 156, word: "monitor", pos: "n.", zh: "監視器、測機", daily: "Look at the computer monitor screen.", fab: "Run monitor wafers daily to test chamber cleanliness." },
-      { id: 157, word: "monthly", pos: "a.", zh: "每月的", daily: "Pay your monthly apartment rent on time.", fab: "Monthly preventative maintenance keeps tools running optimal." },
-      { id: 158, word: "more", pos: "a.", zh: "更多的", daily: "Would you like more tea?", fab: "We need more test wafers to confirm process stability." },
-      { id: 159, word: "move", pos: "v", zh: "移動(n.)產出", daily: "Please move your car out of the driveway.", fab: "Fab move count reached record high this week." },
-      { id: 160, word: "new", pos: "a.", zh: "新的", daily: "He bought a new pair of shoes.", fab: "Qualify new recipe before applying to customer lots." },
-      { id: 161, word: "normal", pos: "a.", zh: "正常的", daily: "His body temperature is normal.", fab: "All chamber pressure readings are back to normal." },
-      { id: 162, word: "note", pos: "n.", zh: "註解", daily: "Write a brief note to remind yourself.", fab: "Add engineering note to lot history before routing." },
-      { id: 163, word: "notice", pos: "n.", zh: "通知", daily: "Post a notice on the bulletin board.", fab: "Safety notice: maintenance ongoing in zone 4." },
-      { id: 164, word: "number", pos: "n.", zh: "號碼", daily: "What is your phone number?", fab: "Check wafer ID number against run-card." },
-      { id: 165, word: "office", pos: "n.", zh: "辦公室", daily: "She works in an office downtown.", fab: "Process engineers analyze fab data in their office." },
-      { id: 166, word: "off-line", pos: "a.", zh: "離線的", daily: "The website is currently off-line for maintenance.", fab: "Tool went off-line due to RF generator fault." },
-      { id: 167, word: "on time", pos: "ph.", zh: "準時", daily: "Please arrive on time for the job interview.", fab: "All wafer lots were delivered on time." },
-      { id: 168, word: "on-line", pos: "a.", zh: "在線的", daily: "Shop for groceries on-line easily.", fab: "Tool is back on-line and running production." },
-      { id: 169, word: "operation", pos: "n.", zh: "操作", daily: "Read user manual for proper operation.", fab: "Follow SOP for safe chemical bench operation." },
-      { id: 170, word: "output", pos: "n.", zh: "輸出", daily: "Solar panels increase electricity output.", fab: "Daily fab output reached 5,000 processed wafers." },
-      { id: 171, word: "oven", pos: "n.", zh: "烤箱", daily: "Bake the cake in the oven at 180°C.", fab: "Bake photoresist coated wafers in the hard bake oven." },
-      { id: 172, word: "over time", pos: "ph.", zh: "加班", daily: "Working over time can cause fatigue.", fab: "Engineers worked over time during new line release." },
-      { id: 173, word: "page", pos: "n.", zh: "頁數", daily: "Turn to page 15 in your textbook.", fab: "Print out page 2 of the tool status report." },
-      { id: 174, word: "paper", pos: "n.", zh: "紙張", daily: "Write your name on the sheet of paper.", fab: "Cleanroom paper must be lint-free." },
-      { id: 175, word: "parameter", pos: "n.", zh: "參數", daily: "Adjust game difficulty parameter.", fab: "Modify RF power parameter in etch recipe." },
-      { id: 176, word: "part", pos: "n.", zh: "零件", daily: "Order replacement parts for your bike.", fab: "Chamber spare parts must be cleaned before installation." },
-      { id: 177, word: "particle", pos: "n.", zh: "微粒", daily: "Dust particles floated in sunlight.", fab: "Particle contamination lowers wafer yield." },
-      { id: 178, word: "pass", pos: "v.", zh: "合格", daily: "She passed her driving test easily.", fab: "Wafer lot passed final visual inspection." },
-      { id: 179, word: "password", pos: "n.", zh: "密碼", daily: "Do not share your password with anyone.", fab: "Enter system password to access tool engineering menu." },
-      { id: 180, word: "perfect", pos: "a.", zh: "完美的", daily: "It was a perfect summer day.", fab: "Achieving perfect yield requires zero defect density." },
-      { id: 181, word: "personal", pos: "a.", zh: "個人的", daily: "Keep your personal items in the locker.", fab: "Wear personal protective equipment (PPE) near acid bench." },
-      { id: 182, word: "phase", pos: "n.", zh: "階段", daily: "Project is in its initial phase.", fab: "Expansion fab entering tool hookup phase." },
-      { id: 183, word: "photo", pos: "n.", zh: "相片", daily: "Take a photo of the scenery.", fab: "Photo process transfers pattern using UV light." },
-      { id: 184, word: "plan", pos: "n.", zh: "計劃", daily: "What is your plan for the weekend?", fab: "Follow preventive maintenance plan strictly." },
-      { id: 185, word: "plus", pos: "prep.", zh: "加上", daily: "Two plus two equals four.", fab: "Total cycle time plus queue time equals lead time." },
-      { id: 186, word: "pod", pos: "n.", zh: "晶片傳送盒", daily: "Pea pod contains sweet green peas.", fab: "FOUP pod transports 300mm wafers safely." },
-      { id: 187, word: "point", pos: "n.", zh: "點", daily: "He raised an important point in meeting.", fab: "Check temperature at center point of chuck." },
-      { id: 188, word: "position", pos: "n.", zh: "位置", daily: "Adjust monitor position for comfort.", fab: "Robot arm returned to home position." },
-      { id: 189, word: "positive", pos: "a.", zh: "正向的", daily: "Maintain a positive attitude.", fab: "Positive resist becomes soluble when exposed to light." },
-      { id: 190, word: "postpone", pos: "v.", zh: "延期", daily: "Postpone picnic due to heavy rain.", fab: "Postpone tool maintenance until lot completes." },
-      { id: 191, word: "power", pos: "n.", zh: "力量", daily: "Turn on electric power switch.", fab: "RF power generation stability affects plasma etch rate." },
-      { id: 192, word: "practice", pos: "v.", zh: "練習", daily: "Practice playing piano every day.", fab: "Practice emergency drill procedures annually." },
-      { id: 193, word: "prepare", pos: "v.", zh: "準備", daily: "Prepare dinner for your family.", fab: "Prepare dummy wafers for tool warm-up." },
-      { id: 194, word: "press", pos: "v.", zh: "按下", daily: "Press button to call elevator.", fab: "Press start button after confirming recipe parameters." },
-      { id: 195, word: "pressure", pos: "n.", zh: "壓力", daily: "High blood pressure requires care.", fab: "Chamber vacuum pressure must reach 10-6 Torr." },
-      { id: 196, word: "preview", pos: "n.", zh: "預覽", daily: "Watch movie trailer preview.", fab: "Preview wafer map before initiating dicing." },
-      { id: 197, word: "price", pos: "n.", zh: "價格", daily: "Compare product price online.", fab: "Silicon wafer raw material price fluctuated." },
-      { id: 198, word: "print", pos: "n.", zh: "列印", daily: "Print document on paper.", fab: "Print out lot tracking tag before transfer." },
-      { id: 199, word: "priority", pos: "n.", zh: "優先順序", daily: "Safety is our top priority.", fab: "Super hot run lots have highest fab priority." },
-      { id: 200, word: "process", pos: "n.", zh: "過程、流程", daily: "Learning a language is a long process.", fab: "Etch process removes unwanted oxide film." },
-      { id: 201, word: "product", pos: "n.", zh: "產品", daily: "New tech product launched today.", fab: "High yield product ready for packaging." },
-      { id: 202, word: "protect", pos: "v.", zh: "保護", daily: "Wear sunscreen to protect your skin.", fab: "Cleanroom suits protect wafers from human particles." },
-      { id: 203, word: "purge", pos: "v.", zh: "清除", daily: "Purge unwanted files from computer.", fab: "Purge gas line with nitrogen before repair." },
-      { id: 204, word: "push", pos: "v.", zh: "推進", daily: "Push door open gently.", fab: "Push cassette firmly into loadport cassette receiver." },
-      { id: 205, word: "quality", pos: "n.", zh: "品質", daily: "High quality food tastes better.", fab: "Wafer surface quality meets customer spec." },
-      { id: 206, word: "quantity", pos: "n.", zh: "數量", daily: "Check item quantity before buying.", fab: "Verify wafer quantity inside pod matches MES count." },
-      { id: 207, word: "rate", pos: "n.", zh: "比率", daily: "Heart rate increases during exercise.", fab: "Deposition rate is 10 nanometers per minute." },
-      { id: 208, word: "re-certify", pos: "v.", zh: "重新認證", daily: "Drivers must re-certify license periodically.", fab: "Re-certify tool after major chamber overhaul." },
-      { id: 209, word: "recipe", pos: "n.", zh: "食譜、處方程式", daily: "Follow cake recipe to bake dessert.", fab: "Select verified etch recipe from menu." },
-      { id: 210, word: "record", pos: "n.", zh: "記錄", daily: "Keep a daily journal record.", fab: "Maintain tool downtime record in system." },
-      { id: 211, word: "recover", pos: "v.", zh: "復機", daily: "Recover health after sickness.", fab: "Tool recovered from error state after reboot." },
-      { id: 212, word: "release", pos: "v.", zh: "釋放", daily: "Release new movie next week.", fab: "Release tool to production after passing test." },
-      { id: 213, word: "remark", pos: "n.", zh: "註記", daily: "Teacher wrote helpful remark.", fab: "Add engineering remark in run-card." },
-      { id: 214, word: "remind", pos: "v.", zh: "提醒", daily: "Remind me to buy milk.", fab: "Alarm sounds to remind operator of recipe completion." },
-      { id: 215, word: "remove", pos: "v.", zh: "移開", daily: "Remove shoes before entering house.", fab: "Ashing step removes photoresist layer completely." },
-      { id: 216, word: "repair", pos: "v.", zh: "修理", daily: "Repair broken bicycle chain.", fab: "Technician called to repair broken robot arm." },
-      { id: 217, word: "report", pos: "n.", zh: "報告", daily: "Write news report on event.", fab: "Generate daily yield analysis report." },
-      { id: 218, word: "reset", pos: "v.", zh: "重設", daily: "Reset password if forgotten.", fab: "Reset tool alarm controller after clearing blockage." },
-      { id: 219, word: "rework", pos: "v.", zh: "重做", daily: "Rework bad essay draft.", fab: "Strip photoresist and rework wafer lot if misaligned." },
-      { id: 220, word: "route", pos: "n.", zh: "路線", daily: "Find fastest driving route on GPS.", fab: "Check wafer manufacturing process route in MES." },
-      { id: 221, word: "rule", pos: "n.", zh: "規則", daily: "Follow game rules fairly.", fab: "Strictly obey cleanroom safety rules." },
-      { id: 222, word: "run", pos: "v.", zh: "運轉、跑", daily: "Run 5 kilometers morning.", fab: "Run test wafer to check particle count." },
-      { id: 223, word: "run-card", pos: "n.", zh: "流程卡", daily: "Keep tracking card with goods.", fab: "Electronic run-card specifies exact step sequence." },
-      { id: 224, word: "S.O.P", pos: "n.", zh: "標準作業程序", daily: "Follow cooking S.O.P for consistent taste.", fab: "Execute chamber clean according to SOP document." },
-      { id: 225, word: "safe", pos: "a.", zh: "安全的", daily: "Store chemical in safe place.", fab: "Verify gas interlock safe status before operation." },
-      { id: 226, word: "same", pos: "a.", zh: "相同的", daily: "We wear same color shirt.", fab: "Ensure all chambers use same recipe version." },
-      { id: 227, word: "save", pos: "v.", zh: "儲存", daily: "Save money in bank account.", fab: "Save recipe modification before exiting software." },
-      { id: 228, word: "scrap", pos: "n.", zh: "報廢", daily: "Throw scrap paper into bin.", fab: "Severe defect wafer lot marked as scrap." },
-      { id: 229, word: "scratch", pos: "v.", zh: "刮傷", daily: "Cat scratch wooden door.", fab: "Avoid surface scratch during wafer handling." },
-      { id: 230, word: "screen", pos: "n.", zh: "螢幕", daily: "Clean smartphone screen gently.", fab: "Monitor recipe graph on tool screen." },
-      { id: 231, word: "select", pos: "v.", zh: "選擇", daily: "Select item from menu list.", fab: "Select appropriate test program on prober tool." },
-      { id: 232, word: "semiconductor", pos: "n.", zh: "半導體", daily: "Semiconductor technology powers modern gadgets.", fab: "Silicon is most widely used semiconductor material." },
-      { id: 233, word: "service", pos: "n.", zh: "服務", daily: "Hotel provides great customer service.", fab: "Tool vendor engineer onsite for service maintenance." },
-      { id: 234, word: "sheet", pos: "n.", zh: "表單", daily: "Write on fresh bed sheet.", fab: "Check chemical safety data sheet (MSDS) before handling." },
-      { id: 235, word: "shift", pos: "n.", zh: "班次", daily: "He works night shift at store.", fab: "Night shift operators hand over status report to day shift." },
-      { id: 236, word: "show", pos: "v.", zh: "顯示", daily: "Show me your ticket.", fab: "Display screen shows active system warnings." },
-      { id: 237, word: "shuttle", pos: "n.", zh: "接駁車", daily: "Take shuttle bus to airport.", fab: "Company shuttle bus carries employees between fabs." },
-      { id: 238, word: "skip", pos: "v.", zh: "跳過", daily: "Skip uninteresting book chapter.", fab: "Do not skip inspection step without EE approval." },
-      { id: 239, word: "sorter", pos: "n.", zh: "排序機、分類機", daily: "Mail sorter organizes letters.", fab: "Wafer sorter rearranges wafers into destination cassette." },
-      { id: 240, word: "source", pos: "n.", zh: "來源", daily: "Water source comes from mountain.", fab: "RF source provides power for plasma generation." },
-      { id: 241, word: "Spec.", pos: "n.", zh: "規格", daily: "Check laptop hardware spec before buying.", fab: "Film thickness measurement within engineering spec." },
-      { id: 242, word: "speed", pos: "n.", zh: "速度", daily: "Drive within speed limit.", fab: "Adjust spin speed during photoresist coating." },
-      { id: 243, word: "split", pos: "n.", zh: "分帳、分批", daily: "Split restaurant bill equally.", fab: "Split lot into two groups for DOE experiment." },
-      { id: 244, word: "stage", pos: "n.", zh: "站別、階段", daily: "Performers on stage.", fab: "Wafer stage aligns position under exposure lens." },
-      { id: 245, word: "standard", pos: "n.", zh: "標準", daily: "Maintain high living standard.", fab: "Cleanliness standard strictly enforced in fab." },
-      { id: 246, word: "standby", pos: "n.", zh: "等待", daily: "Flight passenger on standby list.", fab: "Tool placed in standby mode during idle periods." },
-      { id: 247, word: "start", pos: "n.", zh: "啟動", daily: "Start car engine.", fab: "Press start button to begin processing lot." },
-      { id: 248, word: "station", pos: "n.", zh: "站", daily: "Wait at bus station.", fab: "Transfer lot to next measurement station." },
-      { id: 249, word: "status", pos: "n.", zh: "狀況", daily: "Check flight status online.", fab: "Tool status turned green indicating normal run." },
-      { id: 250, word: "step", pos: "n.", zh: "步驟", daily: "Follow step by step recipe.", fab: "Lithography is critical step in chip manufacturing." },
-      { id: 251, word: "stocker", pos: "n.", zh: "儲存櫃", daily: "Supermarket stocker fills shelves.", fab: "Automated stocker stores up to 500 FOUP pods." },
-      { id: 252, word: "success", pos: "n.", zh: "成功", daily: "Hard work brings success.", fab: "Successful test run allows tool qualification." },
-      { id: 253, word: "super", pos: "a.", zh: "超級的", daily: "Have a super fun day.", fab: "Super hot run lots prioritized above standard lots." },
-      { id: 254, word: "super hot run", pos: "n.", zh: "超級急件", daily: "Express delivery for super urgent documents.", fab: "Super hot run wafer lot bypasses standard queue line." },
-      { id: 255, word: "supervisor", pos: "n.", zh: "監督者", daily: "Ask workplace supervisor for permission.", fab: "Report machine anomaly directly to shift supervisor." },
-      { id: 256, word: "support", pos: "n.", zh: "支援", daily: "Family provides strong emotional support.", fab: "Vendor provides technical support for hardware failure." },
-      { id: 257, word: "switch", pos: "n.", zh: "開關", daily: "Toggle light switch.", fab: "Flip main safety circuit breaker switch." },
-      { id: 258, word: "system", pos: "n.", zh: "系統", daily: "Solar system has eight planets.", fab: "Manufacturing Execution System (MES) tracks wafer movement." },
-      { id: 259, word: "tag", pos: "n.", zh: "標籤(v.) 標註", daily: "Check price tag on shirt.", fab: "Tag defective tool out of service." },
-      { id: 260, word: "take leave", pos: "ph.", zh: "請假", daily: "He takes leave to visit family.", fab: "Submit leave request form to supervisor in advance." },
-      { id: 261, word: "tape", pos: "n.", zh: "膠帶", daily: "Use adhesive tape to seal box.", fab: "Wafer dicing tape holds dies in place during cutting." },
-      { id: 262, word: "target", pos: "n.", zh: "目標", daily: "Achieve annual sales target.", fab: "Sputtering target material deposited on wafer." },
-      { id: 263, word: "technician", pos: "n.", zh: "技術員", daily: "Computer technician fixed laptop.", fab: "Equipment technician replaced worn seal ring." },
-      { id: 264, word: "telephone", pos: "n.", zh: "電話", daily: "Answer ringing telephone.", fab: "Use cleanroom intercom telephone to call control room." },
-      { id: 265, word: "temperature", pos: "n.", zh: "溫度", daily: "Water temperature is comfortable.", fab: "Furnace temperature reaches 1000°C for annealing." },
-      { id: 266, word: "thickness", pos: "n.", zh: "厚度", daily: "Book page thickness varies.", fab: "Measure oxide film thickness using ellipsometer." },
-      { id: 267, word: "thin film", pos: "n.", zh: "薄膜製程", daily: "Soapy bubble forms thin film.", fab: "Chemical vapor deposition grows thin film layers." },
-      { id: 268, word: "time", pos: "n.", zh: "時間", daily: "What time is it?", fab: "Process time per wafer is 45 seconds." },
-      { id: 269, word: "title", pos: "n.", zh: "標題", daily: "Book title printed on cover.", fab: "Job title: Senior Process Integration Engineer." },
-      { id: 270, word: "top", pos: "n.", zh: "頂端", daily: "Mountain top covered in snow.", fab: "Top surface layer planarized by CMP process." },
-      { id: 271, word: "track", pos: "v.", zh: "追蹤", daily: "Track delivery package online.", fab: "MES tracks real-time lot location in fab." },
-      { id: 272, word: "training", pos: "n.", zh: "訓練", daily: "Attend job training workshop.", fab: "Complete cleanroom safety training before entering." },
-      { id: 273, word: "trend", pos: "n.", zh: "趨勢", daily: "Follow latest fashion trend.", fab: "Analyze defect trend chart over past month." },
-      { id: 274, word: "tune", pos: "v.", zh: "調整", daily: "Tune guitar strings.", fab: "Process engineer tunes etch gas ratio." },
-      { id: 275, word: "turn rate", pos: "n.", zh: "週轉率", daily: "Inventory turn rate is high.", fab: "High wafer turn rate maximizes fab output." },
-      { id: 276, word: "unload", pos: "v.", zh: "下貨、卸載", daily: "Unload groceries from car.", fab: "Robot arm unloads processed wafer from chamber." },
-      { id: 277, word: "use", pos: "v.", zh: "使用", daily: "Use pen to write note.", fab: "Use deionized water for wafer rinsing." },
-      { id: 278, word: "username", pos: "n.", zh: "使用者名稱", daily: "Enter account username.", fab: "Log into tool terminal using employee username." },
-      { id: 279, word: "vendor", pos: "n.", zh: "廠商", daily: "Food vendor sells snacks.", fab: "Equipment vendor engineer assists tool overhaul." },
-      { id: 280, word: "view", pos: "v.", zh: "查看", daily: "View beautiful ocean scenery.", fab: "View wafer defect map on inspection screen." },
-      { id: 281, word: "wafer", pos: "n.", zh: "晶圓", daily: "Eat delicious chocolate wafer cookie.", fab: "Silicon wafer is sliced from high-purity single-crystal ingot." },
-      { id: 282, word: "waiting", pos: "n.", zh: "等待", daily: "Waiting room is full.", fab: "Wafer lot in waiting status at stocker." },
-      { id: 283, word: "warning", pos: "n.", zh: "警告", daily: "Heed storm warning sign.", fab: "Tool emits warning sound if temperature exceeds limit." },
-      { id: 284, word: "weekly", pos: "adv.", zh: "每週地", daily: "We hold weekly family dinners.", fab: "Weekly yield review meeting held every Friday." },
-      { id: 285, word: "wet", pos: "a.", zh: "濕的", daily: "Wipe table with wet cloth.", fab: "Wet etch uses liquid chemical bath to remove film." },
-      { id: 286, word: "window", pos: "n.", zh: "視窗", daily: "Open window for fresh air.", fab: "Process window defines allowable recipe parameter variation." },
-      { id: 287, word: "yield", pos: "n.", zh: "良率", daily: "Crop yield increased this harvest.", fab: "Maximizing die yield per wafer boosts fab profitability." },
-      { id: 288, word: "zero", pos: "n.", zh: "零", daily: "Temperature dropped to zero degrees.", fab: "Targeting zero defects on production line." }
-    ];
-
-    // Key TSMC / Semiconductor special terms for quick filtering
-    const semiconductorKeyIds = [11, 34, 44, 70, 81, 82, 134, 142, 148, 150, 156, 175, 177, 186, 199, 209, 219, 223, 224, 232, 239, 241, 251, 254, 267, 281, 287];
-
-    // --- 2. STATE MANAGEMENT & LOCAL STORAGE PERSISTENCE ---
-    const STORAGE_KEY = 'tsmc_vocab_progress_v1';
-
-    let userProgress = {}; 
-    // Format: { [wordId]: { errorCount: 0, mastered: false, reviewCount: 0 } }
-
-    let currentTab = 'flashcards';
-    let defaultContext = 'fab'; // 'fab' or 'daily'
-
-    // Flashcard State
-    let fcFilteredList = [];
-    let fcIndex = 0;
-    let cardFlipped = false;
-    let currentCardContext = 'fab';
-
-    // Quiz State
-    let quizCurrentWord = null;
-    let quizStreak = 0;
-    let quizSentenceContext = 'fab';
-
-    // --- 3. INITIALIZATION ---
-    window.onload = function() {
-      loadProgress();
-      updateDashboardStats();
-      initFlashcardSession();
-      loadNextQuizQuestion();
-      renderVocabularyList();
-    };
-
-    function loadProgress() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          userProgress = JSON.parse(saved);
-        } catch (e) {
-          userProgress = {};
+            updateSentenceDisplay(item);
         }
-      }
-      // Ensure all words have entry
-      rawVocabularyList.forEach(item => {
-        if (!userProgress[item.id]) {
-          userProgress[item.id] = { errorCount: 0, mastered: false, reviewCount: 0 };
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            const cardInner = document.getElementById('card-inner');
+            if (isFlipped) {
+                cardInner.classList.add('rotate-y-180');
+            } else {
+                cardInner.classList.remove('rotate-y-180');
+            }
         }
-      });
-    }
 
-    function saveProgress() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(userProgress));
-      updateDashboardStats();
-    }
+        function switchContext(type) {
+            currentContextType = type;
+            const btnDaily = document.getElementById('btn-daily');
+            const btnFab = document.getElementById('btn-fab');
 
-    function confirmResetProgress() {
-      if (confirm("確定要重置所有學習進度與錯題紀錄嗎？此動作無法復原。")) {
-        userProgress = {};
-        rawVocabularyList.forEach(item => {
-          userProgress[item.id] = { errorCount: 0, mastered: false, reviewCount: 0 };
-        });
-        saveProgress();
-        initFlashcardSession();
-        renderVocabularyList();
-        loadNextQuizQuestion();
-      }
-    }
-
-    function updateDashboardStats() {
-      let total = rawVocabularyList.length;
-      let mastered = 0;
-      let learning = 0;
-      let highErrors = 0;
-
-      rawVocabularyList.forEach(item => {
-        const p = userProgress[item.id] || { errorCount: 0, mastered: false };
-        if (p.mastered) {
-          mastered++;
-        } else {
-          learning++;
+            if (type === 'daily') {
+                btnDaily.className = "px-3 py-1 rounded text-xs font-medium bg-brand-600 text-white transition";
+                btnFab.className = "px-3 py-1 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+            } else {
+                btnFab.className = "px-3 py-1 rounded text-xs font-medium bg-brand-600 text-white transition";
+                btnDaily.className = "px-3 py-1 rounded text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+            }
+            updateSentenceDisplay(vocabData[currentIndex]);
         }
-        if (p.errorCount >= 1) {
-          highErrors++;
+
+        function updateSentenceDisplay(item) {
+            const sentenceEl = document.getElementById('card-sentence');
+            const sentenceZhEl = document.getElementById('card-sentence-zh');
+            if (currentContextType === 'daily') {
+                sentenceEl.innerText = `"${item.daily}"`;
+                sentenceZhEl.innerText = item.dailyZh;
+            } else {
+                sentenceEl.innerText = `"${item.fab}"`;
+                sentenceZhEl.innerText = item.fabZh;
+            }
         }
-      });
 
-      document.getElementById('stat-total').innerText = total;
-      document.getElementById('stat-mastered').innerText = mastered;
-      document.getElementById('stat-learning').innerText = learning;
-      document.getElementById('stat-errors').innerText = highErrors;
+        function handleAnswer(isCorrect) {
+            const item = vocabData[currentIndex];
+            if (!userProgress[item.id]) {
+                userProgress[item.id] = { errors: 0, mastered: false };
+            }
 
-      const pct = Math.round((mastered / total) * 100);
-      document.getElementById('stat-percent').innerText = `${pct}%`;
-      document.getElementById('overall-progress-bar').style.width = `${pct}%`;
-    }
+            if (!isCorrect) {
+                userProgress[item.id].errors += 1;
+                userProgress[item.id].mastered = false;
+            } else {
+                userProgress[item.id].mastered = true;
+            }
 
-    // --- 4. NAVIGATION TABS ---
-    function switchTab(tab) {
-      currentTab = tab;
-      ['flashcards', 'quiz', 'list'].forEach(t => {
-        const btn = document.getElementById(`nav-${t}`);
-        const content = document.getElementById(`tab-${t}-content`);
-        if (t === tab) {
-          btn.className = "px-3 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 bg-cyan-600 text-white shadow";
-          content.classList.remove('hidden');
-        } else {
-          btn.className = "px-3 sm:px-4 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5 text-slate-400 hover:text-slate-200";
-          content.classList.add('hidden');
+            localStorage.setItem('tsmc_vocab_progress', JSON.stringify(userProgress));
+            updateStats();
+            renderVocabularyList();
+
+            // Leitner Spaced Repetition Next Card Algorithm
+            getNextCardIndex(isCorrect);
+            loadCard(currentIndex);
         }
-      });
 
-      if (tab === 'list') {
-        renderVocabularyList();
-      }
-    }
+        function getNextCardIndex(lastWasCorrect) {
+            if (!lastWasCorrect) {
+                // If incorrect, 60% chance to repeat soon or move to next
+                currentIndex = (currentIndex + 1) % vocabData.length;
+            } else {
+                // Weighted selection favoring words with more errors
+                let weightedPool = [];
+                vocabData.forEach((vocab, idx) => {
+                    let weight = 1;
+                    const errs = userProgress[vocab.id]?.errors || 0;
+                    const mastered = userProgress[vocab.id]?.mastered || false;
+                    
+                    if (errs > 0) weight += errs * 3;
+                    if (mastered) weight = 0.2; // Lower appearance frequency for mastered words
 
-    // --- 5. FLASHCARD MODE LOGIC ---
-    function setDefaultContext(ctx) {
-      defaultContext = ctx;
-      document.getElementById('btn-ctx-fab').className = ctx === 'fab' 
-        ? "px-2.5 py-1 rounded-md transition font-medium bg-cyan-600 text-white" 
-        : "px-2.5 py-1 rounded-md transition font-medium text-slate-400 hover:text-slate-200";
-      document.getElementById('btn-ctx-daily').className = ctx === 'daily' 
-        ? "px-2.5 py-1 rounded-md transition font-medium bg-cyan-600 text-white" 
-        : "px-2.5 py-1 rounded-md transition font-medium text-slate-400 hover:text-slate-200";
-      
-      toggleCardContext(ctx);
-    }
-
-    function initFlashcardSession() {
-      const filter = document.getElementById('flashcard-filter').value;
-      
-      fcFilteredList = rawVocabularyList.filter(item => {
-        const p = userProgress[item.id] || { errorCount: 0, mastered: false };
-        if (filter === 'mastered') return p.mastered;
-        if (filter === 'learning') return !p.mastered;
-        if (filter === 'error') return p.errorCount >= 1;
-        if (filter === 'semiconductor') return semiconductorKeyIds.includes(item.id);
-        return true; // 'all'
-      });
-
-      if (fcFilteredList.length === 0) {
-        fcFilteredList = rawVocabularyList; // Fallback
-      }
-
-      fcIndex = 0;
-      cardFlipped = false;
-      renderCurrentFlashcard();
-    }
-
-    function renderCurrentFlashcard() {
-      if (fcFilteredList.length === 0) return;
-      const item = fcFilteredList[fcIndex];
-      const prog = userProgress[item.id] || { errorCount: 0, mastered: false };
-
-      // Ensure card is on front side
-      const card = document.getElementById('flashcard');
-      if (cardFlipped) {
-        card.classList.remove('rotate-y-180');
-        cardFlipped = false;
-      }
-
-      // Front
-      document.getElementById('fc-word').innerText = item.word;
-      document.getElementById('fc-pos').innerText = `${item.pos} ${item.zh}`;
-
-      const statusBadge = document.getElementById('fc-status-badge');
-      if (prog.mastered) {
-        statusBadge.className = "px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
-        statusBadge.innerText = "已精通";
-      } else {
-        statusBadge.className = "px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20";
-        statusBadge.innerText = "學習中";
-      }
-
-      const errBadge = document.getElementById('fc-error-badge');
-      if (prog.errorCount > 0) {
-        errBadge.classList.remove('hidden');
-        errBadge.innerText = `錯 ${prog.errorCount} 次`;
-      } else {
-        errBadge.classList.add('hidden');
-      }
-
-      // Back
-      document.getElementById('fc-back-word').innerText = item.word;
-      document.getElementById('fc-back-pos').innerText = item.pos;
-      document.getElementById('fc-meaning').innerText = item.zh;
-
-      document.getElementById('fc-en-fab').innerText = `"${item.fab}"`;
-      document.getElementById('fc-zh-fab').innerText = `晶圓製造情境：${item.zh}`;
-      
-      document.getElementById('fc-en-daily').innerText = `"${item.daily}"`;
-      document.getElementById('fc-zh-daily').innerText = `日常生活情境：${item.zh}`;
-
-      toggleCardContext(defaultContext);
-
-      // Counter
-      document.getElementById('fc-counter').innerText = `${fcIndex + 1} / ${fcFilteredList.length}`;
-    }
-
-    function flipCard() {
-      const card = document.getElementById('flashcard');
-      cardFlipped = !cardFlipped;
-      if (cardFlipped) {
-        card.classList.add('rotate-y-180');
-      } else {
-        card.classList.remove('rotate-y-180');
-      }
-    }
-
-    function toggleCardContext(ctx) {
-      currentCardContext = ctx;
-      const fabBtn = document.getElementById('fc-tab-fab');
-      const dailyBtn = document.getElementById('fc-tab-daily');
-      const fabBox = document.getElementById('fc-sentence-fab');
-      const dailyBox = document.getElementById('fc-sentence-daily');
-
-      if (ctx === 'fab') {
-        fabBtn.className = "px-3 py-1 rounded font-medium bg-cyan-600 text-white";
-        dailyBtn.className = "px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200";
-        fabBox.classList.remove('hidden');
-        dailyBox.classList.add('hidden');
-      } else {
-        dailyBtn.className = "px-3 py-1 rounded font-medium bg-cyan-600 text-white";
-        fabBtn.className = "px-3 py-1 rounded font-medium text-slate-400 hover:text-slate-200";
-        dailyBox.classList.remove('hidden');
-        fabBox.classList.add('hidden');
-      }
-    }
-
-    function nextCard() {
-      if (fcFilteredList.length === 0) return;
-      fcIndex = (fcIndex + 1) % fcFilteredList.length;
-      renderCurrentFlashcard();
-    }
-
-    function prevCard() {
-      if (fcFilteredList.length === 0) return;
-      fcIndex = (fcIndex - 1 + fcFilteredList.length) % fcFilteredList.length;
-      renderCurrentFlashcard();
-    }
-
-    function markCardMastery(isMastered) {
-      if (fcFilteredList.length === 0) return;
-      const item = fcFilteredList[fcIndex];
-      
-      if (!userProgress[item.id]) {
-        userProgress[item.id] = { errorCount: 0, mastered: false, reviewCount: 0 };
-      }
-
-      userProgress[item.id].mastered = isMastered;
-      if (!isMastered) {
-        userProgress[item.id].errorCount += 1;
-      }
-      userProgress[item.id].reviewCount += 1;
-
-      saveProgress();
-      nextCard();
-    }
-
-    function speakCurrentWord() {
-      if (fcFilteredList.length === 0) return;
-      const word = fcFilteredList[fcIndex].word;
-      speakText(word);
-    }
-
-    // --- 6. SPACED REPETITION QUIZ LOGIC ---
-    function loadNextQuizQuestion() {
-      const feedback = document.getElementById('quiz-feedback');
-      const nextBtn = document.getElementById('btn-next-quiz');
-      feedback.classList.add('hidden');
-      nextBtn.classList.add('hidden');
-
-      // Weighted selection based on error count
-      // higher errorCount = higher weight
-      let weightedPool = [];
-      rawVocabularyList.forEach(item => {
-        const prog = userProgress[item.id] || { errorCount: 0, mastered: false };
-        let weight = 1;
-        if (!prog.mastered) weight += 2;
-        weight += prog.errorCount * 3; // Errors heavily increase probability
-
-        for (let i = 0; i < weight; i++) {
-          weightedPool.push(item);
+                    for (let i = 0; i < Math.ceil(weight); i++) {
+                        weightedPool.push(idx);
+                    }
+                });
+                currentIndex = weightedPool[Math.floor(Math.random() * weightedPool.length)];
+            }
         }
-      });
 
-      const randomTarget = weightedPool[Math.floor(Math.random() * weightedPool.length)];
-      quizCurrentWord = randomTarget;
+        function updateStats() {
+            let masteredCount = 0;
+            let totalErrors = 0;
 
-      const prog = userProgress[randomTarget.id] || { errorCount: 0 };
+            vocabData.forEach(v => {
+                if (userProgress[v.id]?.mastered) masteredCount++;
+                totalErrors += (userProgress[v.id]?.errors || 0);
+            });
 
-      document.getElementById('quiz-target-word').innerText = randomTarget.word;
-      
-      const weightTag = document.getElementById('quiz-word-weight-tag');
-      if (prog.errorCount > 0) {
-        weightTag.innerText = `⚠️ 歷史錯題次數: ${prog.errorCount} 次 (加強出現)`;
-      } else {
-        weightTag.innerText = `✨ 正常複習權重`;
-      }
-
-      // Generate 4 Options (1 correct + 3 distractor)
-      let options = [randomTarget];
-      while (options.length < 4) {
-        const randOpt = rawVocabularyList[Math.floor(Math.random() * rawVocabularyList.length)];
-        if (!options.some(o => o.id === randOpt.id)) {
-          options.push(randOpt);
+            document.getElementById('stat-mastered').innerText = masteredCount;
+            document.getElementById('stat-errors').innerText = totalErrors;
+            document.getElementById('stat-progress').innerText = Math.round((masteredCount / vocabData.length) * 100) + '%';
         }
-      }
 
-      // Shuffle options
-      options.sort(() => Math.random() - 0.5);
-
-      const optionsContainer = document.getElementById('quiz-options');
-      optionsContainer.innerHTML = '';
-
-      options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = "p-4 rounded-2xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-left font-medium transition text-slate-200 text-xs sm:text-sm flex items-center justify-between group";
-        btn.onclick = () => handleQuizAnswer(opt.id, btn);
-        btn.innerHTML = `
-          <span><strong class="text-cyan-400 font-mono mr-1.5">${opt.pos}</strong> ${opt.zh}</span>
-          <i class="fa-solid fa-chevron-right text-slate-500 group-hover:text-cyan-400 transition text-xs"></i>
-        `;
-        optionsContainer.appendChild(btn);
-      });
-
-      updateQuizSentenceHint();
-    }
-
-    function switchQuizSentenceContext(ctx) {
-      quizSentenceContext = ctx;
-      document.getElementById('btn-quiz-ctx-fab').className = ctx === 'fab' ? "text-cyan-400 font-bold underline" : "text-slate-400 hover:text-slate-200";
-      document.getElementById('btn-quiz-ctx-daily').className = ctx === 'daily' ? "text-cyan-400 font-bold underline" : "text-slate-400 hover:text-slate-200";
-      updateQuizSentenceHint();
-    }
-
-    function updateQuizSentenceHint() {
-      if (!quizCurrentWord) return;
-      const sentence = quizSentenceContext === 'fab' ? quizCurrentWord.fab : quizCurrentWord.daily;
-      // Mask target word in sentence for hint
-      const regex = new RegExp(quizCurrentWord.word, 'gi');
-      const masked = sentence.replace(regex, '______');
-      document.getElementById('quiz-sentence-hint').innerText = `"${masked}"`;
-    }
-
-    function handleQuizAnswer(selectedId, btnElement) {
-      const feedback = document.getElementById('quiz-feedback');
-      const nextBtn = document.getElementById('btn-next-quiz');
-      const isCorrect = selectedId === quizCurrentWord.id;
-
-      // Disable all option buttons
-      const buttons = document.querySelectorAll('#quiz-options button');
-      buttons.forEach(b => b.disabled = true);
-
-      if (!userProgress[quizCurrentWord.id]) {
-        userProgress[quizCurrentWord.id] = { errorCount: 0, mastered: false, reviewCount: 0 };
-      }
-
-      if (isCorrect) {
-        btnElement.className = "p-4 rounded-2xl bg-emerald-950 border border-emerald-500 text-emerald-200 font-medium text-xs sm:text-sm flex items-center justify-between";
-        feedback.className = "p-4 rounded-xl text-sm font-medium border bg-emerald-950/60 border-emerald-800 text-emerald-300 block";
-        feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i><strong>答對了！</strong> ${quizCurrentWord.word} 的確是 ${quizCurrentWord.pos} ${quizCurrentWord.zh}。`;
-        
-        quizStreak++;
-        userProgress[quizCurrentWord.id].reviewCount += 1;
-        if (userProgress[quizCurrentWord.id].reviewCount >= 3 && userProgress[quizCurrentWord.id].errorCount === 0) {
-          userProgress[quizCurrentWord.id].mastered = true;
+        function playAudio() {
+            const word = vocabData[currentIndex].word;
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
         }
-      } else {
-        btnElement.className = "p-4 rounded-2xl bg-rose-950 border border-rose-500 text-rose-200 font-medium text-xs sm:text-sm flex items-center justify-between";
-        feedback.className = "p-4 rounded-xl text-sm font-medium border bg-rose-950/60 border-rose-800 text-rose-300 block";
-        feedback.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i><strong>答錯了！</strong> 正確解答是：<strong class="text-white">${quizCurrentWord.pos} ${quizCurrentWord.zh}</strong>。已自動增加此單字錯題紀錄。`;
 
-        quizStreak = 0;
-        userProgress[quizCurrentWord.id].errorCount += 1;
-        userProgress[quizCurrentWord.id].mastered = false; // Demote if answered wrong
-      }
+        function switchTab(tab) {
+            const fSec = document.getElementById('view-flashcard');
+            const lSec = document.getElementById('view-list');
+            const nF = document.getElementById('nav-flashcard');
+            const nL = document.getElementById('nav-list');
 
-      document.getElementById('quiz-streak').innerText = quizStreak;
-      saveProgress();
-
-      nextBtn.classList.remove('hidden');
-    }
-
-    function speakQuizWord() {
-      if (quizCurrentWord) {
-        speakText(quizCurrentWord.word);
-      }
-    }
-
-    // --- 7. VOCABULARY LIST TABLE LOGIC ---
-    function renderVocabularyList() {
-      const search = document.getElementById('list-search-input').value.toLowerCase().trim();
-      const filterStatus = document.getElementById('list-filter-status').value;
-      const tbody = document.getElementById('vocab-table-body');
-      const emptyState = document.getElementById('table-empty-state');
-
-      tbody.innerHTML = '';
-
-      let count = 0;
-
-      rawVocabularyList.forEach(item => {
-        const prog = userProgress[item.id] || { errorCount: 0, mastered: false };
-
-        // Search Filter
-        const matchesSearch = item.word.toLowerCase().includes(search) || item.zh.includes(search);
-
-        // Status Filter
-        let matchesStatus = true;
-        if (filterStatus === 'mastered') matchesStatus = prog.mastered;
-        if (filterStatus === 'learning') matchesStatus = !prog.mastered;
-        if (filterStatus === 'error') matchesStatus = prog.errorCount >= 1;
-
-        if (matchesSearch && matchesStatus) {
-          count++;
-          const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-800/40 transition";
-
-          tr.innerHTML = `
-            <td class="py-3.5 px-4 font-semibold text-white">
-              <div class="flex items-center space-x-2">
-                <button onclick="speakText('${item.word}')" class="text-slate-400 hover:text-cyan-400 transition">
-                  <i class="fa-solid fa-volume-high text-xs"></i>
-                </button>
-                <span>${item.word}</span>
-                <span class="text-xs text-slate-500 font-mono">${item.pos}</span>
-              </div>
-            </td>
-            <td class="py-3.5 px-4 text-cyan-300 font-medium">${item.zh}</td>
-            <td class="py-3.5 px-4 text-xs text-slate-400 hidden md:table-cell max-w-xs truncate" title="${item.fab}">
-              ${item.fab}
-            </td>
-            <td class="py-3.5 px-4 text-xs text-slate-400 hidden lg:table-cell max-w-xs truncate" title="${item.daily}">
-              ${item.daily}
-            </td>
-            <td class="py-3.5 px-4 text-center font-mono font-bold ${prog.errorCount > 0 ? 'text-rose-400' : 'text-slate-500'}">
-              ${prog.errorCount}
-            </td>
-            <td class="py-3.5 px-4 text-center">
-              ${prog.mastered 
-                ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">已精通</span>' 
-                : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">學習中</span>'}
-            </td>
-            <td class="py-3.5 px-4 text-center">
-              <button onclick="toggleWordMasteryInTable(${item.id})" class="text-xs px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
-                ${prog.mastered ? '標為學習中' : '標為精通'}
-              </button>
-            </td>
-          `;
-          tbody.appendChild(tr);
+            if (tab === 'flashcard') {
+                fSec.classList.remove('hidden');
+                lSec.classList.add('hidden');
+                nF.className = "px-4 py-1.5 rounded-lg text-xs font-medium transition-all bg-brand-600 text-white shadow";
+                nL.className = "px-4 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white";
+            } else {
+                fSec.classList.add('hidden');
+                lSec.classList.remove('hidden');
+                nL.className = "px-4 py-1.5 rounded-lg text-xs font-medium transition-all bg-brand-600 text-white shadow";
+                nF.className = "px-4 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-400 hover:text-white";
+                renderVocabularyList();
+            }
         }
-      });
 
-      if (count === 0) {
-        emptyState.classList.remove('hidden');
-      } else {
-        emptyState.classList.add('hidden');
-      }
-    }
+        function renderVocabularyList(filter = '') {
+            const tbody = document.getElementById('vocab-table-body');
+            tbody.innerHTML = '';
 
-    function toggleWordMasteryInTable(wordId) {
-      if (!userProgress[wordId]) {
-        userProgress[wordId] = { errorCount: 0, mastered: false, reviewCount: 0 };
-      }
-      userProgress[wordId].mastered = !userProgress[wordId].mastered;
-      saveProgress();
-      renderVocabularyList();
-    }
+            const keyword = filter.toLowerCase();
+            const filtered = vocabData.filter(v => 
+                v.word.toLowerCase().includes(keyword) || v.meaning.includes(keyword)
+            );
 
-    // --- 8. AUDIO SPEECH SYNTHESIS (TTS) ---
-    function speakText(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Stop active speech
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.9;
-        window.speechSynthesis.speak(utterance);
-      }
-    }
-  </script>
+            filtered.forEach(v => {
+                const errs = userProgress[v.id]?.errors || 0;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 transition";
+                tr.innerHTML = `
+                    <td class="p-3 text-slate-500 text-xs">#${v.id}</td>
+                    <td class="p-3 font-semibold text-white">${v.word}</td>
+                    <td class="p-3 text-slate-300"><span class="text-xs text-brand-400 mr-2">[${v.pos}]</span>${v.meaning}</td>
+                    <td class="p-3 text-center"><span class="px-2 py-0.5 rounded text-xs ${errs > 0 ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' : 'text-slate-500'}">${errs}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterVocabulary() {
+            const val = document.getElementById('search-input').value;
+            renderVocabularyList(val);
+        }
+
+        window.onload = initApp;
+    </script>
 </body>
 </html>
